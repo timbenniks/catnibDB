@@ -1,12 +1,19 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["@nuxt/ui", "@nuxtjs/supabase"],
+  extends: ["@nuxt/ui-pro"],
+  modules: ["@nuxt/ui", "@nuxtjs/supabase", "@nuxtjs/algolia"],
 
   supabase: {
     redirectOptions: {
-      login: '/login',
-      callback: '/confirm',
+      login: "/login",
+      callback: "/confirm",
       exclude: [],
+    }
+  },
+
+  algolia: {
+    instantSearch: {
+      theme: 'reset'
     }
   }
 })

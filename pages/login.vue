@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from "#ui/types";
 import { validateEmail } from "../lib/helpers";
+
+definePageMeta({
+  layout: "meta",
+});
+
 const supabase = useSupabaseClient();
 
 const state = reactive({
@@ -44,9 +49,12 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 <template>
   <UContainer :ui="{ constrained: 'max-w-xl' }">
     <UCard class="mt-10">
-      <template #header
-        ><h1 class="font-bold text-xl">Log in to Libres Chats</h1></template
-      >
+      <template #header>
+        <div class="flex justify-between">
+          <h1 class="font-bold text-xl">Log in</h1>
+          <UColorModeButton />
+        </div>
+      </template>
 
       <section>
         <UForm
