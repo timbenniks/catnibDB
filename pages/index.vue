@@ -26,6 +26,10 @@ const links = [
 
 const columns = [
   {
+    key: "id",
+    label: "ID",
+  },
+  {
     key: "name",
     label: "Nom",
   },
@@ -63,6 +67,7 @@ function transformItems(items: any) {
 function mapToTableRows(items: any) {
   return items.map((item: any) => {
     return {
+      id: item.id,
       name: item.name,
       sex: item.sex,
       adopted: item.adopted,
@@ -73,6 +78,10 @@ function mapToTableRows(items: any) {
   });
 }
 
+function select(row: any) {
+  navigateTo(`/cats/${row.id}`);
+}
+
 // const cats = await useCats();
 </script>
 
@@ -81,12 +90,12 @@ function mapToTableRows(items: any) {
     <UPage :ui="{ wrapper: 'max-w-full', left: 'pl-8' }">
       <template #left>
         <UAside>
-          <template #top>
+          <!-- <template #top>
             <ais-search-box>
               <template v-slot="{ currentRefinement, isSearchStalled, refine }">
                 <UInput
                   type="search"
-                  placeholder="Recherge chat"
+                  placeholder="Recherche chat"
                   icon="i-heroicons-magnifying-glass-20-solid"
                   :loading="isSearchStalled"
                   :modelValue="currentRefinement"
@@ -94,7 +103,7 @@ function mapToTableRows(items: any) {
                 />
               </template>
             </ais-search-box>
-          </template>
+          </template> -->
 
           <h3 class="font-bold mb-2">Character</h3>
           <ais-refinement-list
@@ -192,8 +201,22 @@ function mapToTableRows(items: any) {
         <ais-hits>
           <template v-slot="{ items }">
             <div
-              class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700"
+              class="flex px-3 justify-between py-3.5 border-b border-gray-200 dark:border-gray-700"
             >
+              <ais-search-box>
+                <template
+                  v-slot="{ currentRefinement, isSearchStalled, refine }"
+                >
+                  <UInput
+                    type="search"
+                    placeholder="Recherche chat"
+                    icon="i-heroicons-magnifying-glass-20-solid"
+                    :loading="isSearchStalled"
+                    :modelValue="currentRefinement"
+                    @input="refine($event.currentTarget.value)"
+                  />
+                </template>
+              </ais-search-box>
               <USelectMenu
                 v-model="selectedColumns"
                 :options="columns"
@@ -202,7 +225,11 @@ function mapToTableRows(items: any) {
               />
             </div>
 
-            <UTable :columns="selectedColumns" :rows="mapToTableRows(items)" />
+            <UTable
+              :columns="selectedColumns"
+              :rows="mapToTableRows(items)"
+              @select="select"
+            />
           </template>
         </ais-hits>
       </UPageBody>
