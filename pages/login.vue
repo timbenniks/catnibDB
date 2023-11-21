@@ -44,10 +44,22 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     loginError.value = false;
   }
 }
+
+const user = useSupabaseUser();
+watch(
+  user,
+  () => {
+    if (user.value) {
+      return navigateTo("/");
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
   <UContainer :ui="{ constrained: 'max-w-xl' }">
+    <img src="/chats.svg" class="w-20 my-5 mx-auto" />
     <UCard class="mt-10">
       <template #header>
         <div class="flex justify-between">

@@ -18,7 +18,7 @@ const links = [
     to: "/",
   },
   {
-    label: "Add cat",
+    label: "Add new cat",
     icon: "i-heroicons-plus",
     to: "/cats/new",
   },
@@ -39,7 +39,7 @@ const columns = [
   },
   {
     key: "adopted",
-    label: "adopte",
+    label: "Adopte",
   },
   {
     key: "host_fam",
@@ -199,7 +199,7 @@ function select(row: any) {
         <ais-hits>
           <template v-slot="{ items }">
             <div
-              class="flex px-3 justify-between py-3.5 border-b border-gray-200 dark:border-gray-700"
+              class="flex justify-between py-3.5 border-b border-gray-200 dark:border-gray-700"
             >
               <ais-search-box>
                 <template
