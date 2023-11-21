@@ -81,8 +81,6 @@ function mapToTableRows(items: any) {
 function select(row: any) {
   navigateTo(`/cats/${row.id}`);
 }
-
-// const cats = await useCats();
 </script>
 
 <template>
