@@ -4,9 +4,4 @@ Dus
 
 ## Data
 
-- Cats
-  - Adopted
-  - Deceased
-- Foster Families
-  - Approved
-  - Requested
+https://alfred-skyblue.github.io/vue-draggable-plus/en/

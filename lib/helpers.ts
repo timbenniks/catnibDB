@@ -9,6 +9,15 @@ export async function treatmentsByCat(catId: number, client: SupabaseClient) {
   return data;
 }
 
+export async function weightsByCat(catId: number, client: SupabaseClient) {
+  const { data } = await client
+    .from("weight")
+    .select("date, weight_gr")
+    .eq("cat_id", catId);
+
+  return data;
+}
+
 export function translateFacetLabel(label: string) {
   let translated = '';
 
@@ -49,13 +58,60 @@ export function translateFacetLabel(label: string) {
   return translated;
 }
 
-export async function weightsByCat(catId: number, client: SupabaseClient) {
-  const { data } = await client
-    .from("weight")
-    .select("date, weight_gr")
-    .eq("cat_id", catId);
+export function translateTreatmentLabel(label: string) {
+  let translated = '';
 
-  return data;
+  switch (label) {
+    case "vaccination_first":
+      translated = "1st vaccination"
+      break;
+
+    case "vaccination_second":
+      translated = "2nd vaccination"
+      break;
+
+    case "test_fiv":
+      translated = "Tested for FIV"
+      break;
+
+    case "test_felv":
+      translated = "Tested for FELV"
+      break;
+
+    case "deworm":
+      translated = "Dewormed"
+      break;
+
+    case "antiparasite_internal":
+      translated = "Internal antiparasite"
+      break;
+
+    case "antiparasite_external":
+      translated = "External antiparasite"
+      break;
+
+    case "corona":
+      translated = "Corona"
+      break;
+
+    case "giardiasis":
+      translated = "Giardiasis"
+      break;
+
+    case "ringworm":
+      translated = "Ringworm"
+      break;
+
+    case "diarrhea":
+      translated = "Diarrhea"
+      break;
+
+    case "cat_fluother":
+      translated = "Cat fluother"
+      break;
+  }
+
+  return translated;
 }
 
 export function addFacets(cat: any) {

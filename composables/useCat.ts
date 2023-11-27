@@ -7,10 +7,10 @@ export async function useCat(catId: number) {
       .from("cats")
       .select(`*,
         host_family_id(
-          id,name,address,email,phone
+          id,name,address,email,phone,family_type
         ),
         adoption_family_id(
-          id,name,address,email,phone
+          id,name,address,email,phone,family_type
         )
       `)
       .eq("id", catId)
