@@ -82,30 +82,29 @@ const links = [
         </UFormGroup>
 
         <div class="grid grid-cols-2 gap-4">
-          <UCard>
+          <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
             <NuxtImg
               provider="cloudinary"
               src="https://qudljltfyoctkydecbon.supabase.co/storage/v1/object/public/cat_images/IMG_7738.JPG"
               width="500"
-              height="415"
+              height="475"
               fit="fill"
               :modifiers="{ gravity: 'subject' }"
             />
           </UCard>
-          <UCard>
-            <div class="grid grid-cols-2 gap-8 mb-8">
-              <UFormGroup label="Birth Date" name="birth_date">
-                <UInput type="date" v-model="state.birth_date" @change="save" />
-              </UFormGroup>
+          <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
+            <UFormGroup label="Birth Date" name="birth_date">
+              <UInput type="date" v-model="state.birth_date" @change="save" />
+            </UFormGroup>
 
-              <UCheckbox
-                v-model="state.deceased"
-                name="deceased"
-                label="Deceased"
-                @update:modelValue="save"
-                class="pt-7"
-              />
-            </div>
+            <UCheckbox
+              v-model="state.deceased"
+              name="deceased"
+              label="Deceased"
+              @update:modelValue="save"
+              class="my-8"
+            />
+
             <UFormGroup label="Sex" name="sex" class="mb-8">
               <USelectMenu
                 v-model="state.sex"
@@ -114,26 +113,21 @@ const links = [
               />
             </UFormGroup>
 
-            <div class="grid grid-cols-2 gap-8 mb-8">
-              <UFormGroup label="Arrival Date" name="arrival_date">
-                <UInput
-                  type="date"
-                  v-model="state.arrival_date"
-                  @change="save"
-                />
-              </UFormGroup>
-              <UFormGroup label="Protocol Date" name="protocol_date">
-                <UInput
-                  type="date"
-                  v-model="state.protocol_date"
-                  @change="save"
-                />
-              </UFormGroup>
-            </div>
+            <UFormGroup label="Arrival Date" name="arrival_date" class="mb-8">
+              <UInput type="date" v-model="state.arrival_date" @change="save" />
+            </UFormGroup>
+
+            <UFormGroup label="Protocol Date" name="protocol_date">
+              <UInput
+                type="date"
+                v-model="state.protocol_date"
+                @change="save"
+              />
+            </UFormGroup>
           </UCard>
         </div>
 
-        <UCard :ui="{ base: '' }">
+        <UCard :ui="{ base: '', background: 'bg-gray-50 dark:bg-gray-950' }">
           <template #header>
             <p class="font-bold">Adoption</p>
           </template>
@@ -191,7 +185,7 @@ const links = [
           </div>
         </UCard>
 
-        <UCard>
+        <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
           <template #header>
             <p class="font-bold">About</p>
           </template>
@@ -244,7 +238,7 @@ const links = [
           </UFormGroup>
         </UCard>
 
-        <UCard>
+        <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
           <template #header>
             <p class="font-bold">Medical</p>
           </template>
@@ -293,7 +287,7 @@ const links = [
               <UAccordion
                 color="primary"
                 multiple
-                variant="soft"
+                variant="solid"
                 :items="treatments"
               />
             </UFormGroup>
