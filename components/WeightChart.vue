@@ -3,26 +3,41 @@ import { LineChart } from "vue-chart-3";
 
 const props = defineProps(["data"]);
 
-const data1 = ref([3000, 4000, 6000, 7000]);
-const doughnutRef = ref();
+function getLabelsForData() {
+  return props.data.map((d) => {
+    return new Date(d.Date).toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "short",
+    });
+  });
+}
 
-const testData = computed(() => ({
-  labels: ["1 dec", "6 dec", "10 dec", "11 dec"],
+function getDataForData() {
+  return props.data.map((d) => {
+    return d.Weight;
+  });
+}
+
+const chartRef = ref();
+
+const chartData = computed(() => ({
+  labels: getLabelsForData(),
   datasets: [
     {
-      data: data1.value,
+      data: getDataForData(),
       label: "Weight",
     },
   ],
 }));
 
 const options = ref({
-  responsive: true,
+  plugins: {
+    legend: {
+      display: false,
+    },
+  },
 });
 </script>
 <template>
-  <div>
-    <pre>{{ data }}</pre>
-    <LineChart ref="doughnutRef" :chartData="testData" :options="options" />
-  </div>
+  <LineChart ref="chartRef" :chartData="chartData" :options="options" />
 </template>

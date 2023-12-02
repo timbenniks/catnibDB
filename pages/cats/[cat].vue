@@ -55,11 +55,13 @@ function selectAdoptionFamily(fam: any) {
 function addNewTreatment(treatment: any) {
   state.value.treatments.push(treatment);
   treatmentModalOpen.value = false;
+  save();
 }
 
 function addNewWeight(weight: any) {
   state.value.weights.push(weight);
   weightModalOpen.value = false;
+  save();
 }
 
 async function onSubmit() {
@@ -107,7 +109,10 @@ const links = [
         </UFormGroup>
 
         <div class="grid grid-cols-2 gap-4">
-          <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
+          <UCard
+            class="relative"
+            :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }"
+          >
             <NuxtImg
               provider="cloudinary"
               src="https://qudljltfyoctkydecbon.supabase.co/storage/v1/object/public/cat_images/IMG_7738.JPG"
@@ -115,6 +120,16 @@ const links = [
               height="475"
               fit="fill"
               :modifiers="{ gravity: 'subject' }"
+              class="rounded-lg"
+            />
+            <UButton
+              icon="i-heroicons-pencil-square"
+              size="sm"
+              color="primary"
+              variant="solid"
+              square
+              class="absolute right-8 bottom-8"
+              @click=""
             />
           </UCard>
           <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
@@ -352,8 +367,7 @@ const links = [
             </UFormGroup>
 
             <UFormGroup label="Weight">
-              <UTable :rows="weights" />
-
+              <weight-chart :data="weights" />
               <UButton
                 icon="i-heroicons-plus"
                 size="sm"
@@ -388,8 +402,14 @@ const links = [
             </UFormGroup>
           </div>
         </UCard>
+
+        <UCard ref="images" :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
+          <template #header>
+            <p class="font-bold">Images</p>
+          </template>
+          d
+        </UCard>
       </UForm>
-      <pre>{{ weights }}</pre>
     </UPageBody>
   </UPage>
 </template>
