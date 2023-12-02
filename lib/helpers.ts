@@ -3,7 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 export async function treatmentsByCat(catId: number, client: SupabaseClient) {
   const { data } = await client
     .from("treatments")
-    .select("date, notes, treatment_type, treatment_outcome")
+    .select("id, cat_id, date, notes, treatment_type, treatment_outcome")
     .eq("cat_id", catId);
 
   return data;
@@ -12,7 +12,7 @@ export async function treatmentsByCat(catId: number, client: SupabaseClient) {
 export async function weightsByCat(catId: number, client: SupabaseClient) {
   const { data } = await client
     .from("weight")
-    .select("date, weight_gr")
+    .select("id, cat_id, date, weight_gr")
     .eq("cat_id", catId);
 
   return data;

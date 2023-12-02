@@ -5,6 +5,8 @@ const { params } = useRoute();
 const catId = Number(params.cat);
 const cat = await useCat(catId);
 
+const treatmentModalOpen = ref(false);
+const weightModalOpen = ref(false);
 const state = reactive(cat);
 
 const treatments = computed(() => {
@@ -27,6 +29,19 @@ const treatments = computed(() => {
   return result;
 });
 
+const weights = computed(() => {
+  let result: any[] = [];
+
+  cat.value.weights.map((weight: any) => {
+    result.push({
+      Date: weight.date,
+      Weight: weight.weight_gr,
+    });
+  });
+
+  return result;
+});
+
 function selectHostFamily(fam: any) {
   state.value.host_family_id = fam;
   save();
@@ -35,6 +50,16 @@ function selectHostFamily(fam: any) {
 function selectAdoptionFamily(fam: any) {
   state.value.adoption_family_id = fam;
   save();
+}
+
+function addNewTreatment(treatment: any) {
+  state.value.treatments.push(treatment);
+  treatmentModalOpen.value = false;
+}
+
+function addNewWeight(weight: any) {
+  state.value.weights.push(weight);
+  weightModalOpen.value = false;
 }
 
 async function onSubmit() {
@@ -287,17 +312,84 @@ const links = [
               <UAccordion
                 color="primary"
                 multiple
-                variant="solid"
+                variant="soft"
                 :items="treatments"
               />
+              <UButton
+                icon="i-heroicons-plus"
+                size="sm"
+                color="primary"
+                variant="link"
+                label="Add Treatment"
+                :trailing="false"
+                class="mt-4"
+                @click="treatmentModalOpen = true"
+              />
+              <UModal v-model="treatmentModalOpen">
+                <UCard>
+                  <template #header>
+                    <div class="flex items-center justify-between">
+                      <h3
+                        class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                      >
+                        Add Treatment
+                      </h3>
+                      <UButton
+                        color="gray"
+                        variant="ghost"
+                        icon="i-heroicons-x-mark-20-solid"
+                        class="-my-1"
+                        @click="treatmentModalOpen = false"
+                      />
+                    </div>
+                  </template>
+                  <new-treatment
+                    :catid="cat.id"
+                    @newTreatment="addNewTreatment"
+                  />
+                </UCard>
+              </UModal>
             </UFormGroup>
 
             <UFormGroup label="Weight">
-              <UTable :rows="cat.weights" />
+              <UTable :rows="weights" />
+
+              <UButton
+                icon="i-heroicons-plus"
+                size="sm"
+                color="primary"
+                variant="link"
+                label="Add Weight"
+                :trailing="false"
+                class="mt-4"
+                @click="weightModalOpen = true"
+              />
+              <UModal v-model="weightModalOpen">
+                <UCard>
+                  <template #header>
+                    <div class="flex items-center justify-between">
+                      <h3
+                        class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                      >
+                        Add Weight
+                      </h3>
+                      <UButton
+                        color="gray"
+                        variant="ghost"
+                        icon="i-heroicons-x-mark-20-solid"
+                        class="-my-1"
+                        @click="weightModalOpen = false"
+                      />
+                    </div>
+                  </template>
+                  <new-weight :catid="cat.id" @newWeight="addNewWeight" />
+                </UCard>
+              </UModal>
             </UFormGroup>
           </div>
         </UCard>
       </UForm>
+      <pre>{{ weights }}</pre>
     </UPageBody>
   </UPage>
 </template>
