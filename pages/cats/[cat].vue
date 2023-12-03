@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import { useThrottleFn } from "@vueuse/core";
 import { translateTreatmentLabel } from "../../lib/helpers";
+
 const { params } = useRoute();
 const catId = Number(params.cat);
 const cat = await useCat(catId);
 
 const treatmentModalOpen = ref(false);
 const weightModalOpen = ref(false);
+const imageModalOpen = ref(false);
 const state = reactive(cat);
+const toast = useToast();
+const imagecard = ref();
+
+function scrollToImages() {
+  imagecard.value?.$el.scrollIntoView({ behavior: "smooth" });
+}
 
 const treatments = computed(() => {
   let result: any[] = [];
@@ -64,6 +72,18 @@ function addNewWeight(weight: any) {
   save();
 }
 
+function addNewImage(image: string) {
+  let images = state.value.images;
+  state.value.images = `${images},${image}`;
+  imageModalOpen.value = false;
+  save();
+}
+
+function newImages(images: any) {
+  state.value.images = images;
+  save();
+}
+
 async function onSubmit() {
   save();
 }
@@ -73,7 +93,14 @@ const saveThrottled = useThrottleFn(() => {
 }, 1000);
 
 function save() {
-  console.log(state);
+  console.log(state.value);
+  toast.add({
+    id: "saved",
+    title: "Saved",
+    description: "Information is automatically saved",
+    icon: "i-heroicons-check-badge",
+    timeout: 2000,
+  });
 }
 
 const links = [
@@ -113,24 +140,18 @@ const links = [
             class="relative"
             :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }"
           >
-            <NuxtImg
-              provider="cloudinary"
-              src="https://qudljltfyoctkydecbon.supabase.co/storage/v1/object/public/cat_images/IMG_7738.JPG"
-              width="500"
-              height="475"
-              fit="fill"
-              :modifiers="{ gravity: 'subject' }"
-              class="rounded-lg"
-            />
-            <UButton
-              icon="i-heroicons-pencil-square"
-              size="sm"
-              color="primary"
-              variant="solid"
-              square
-              class="absolute right-8 bottom-8"
-              @click=""
-            />
+            <MainImage :images="cat.images" />
+            <client-only>
+              <UButton
+                icon="i-heroicons-pencil-square"
+                size="sm"
+                color="primary"
+                variant="solid"
+                square
+                class="absolute right-8 bottom-8"
+                @click="scrollToImages"
+              />
+            </client-only>
           </UCard>
           <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
             <UFormGroup label="Birth Date" name="birth_date">
@@ -278,6 +299,48 @@ const links = [
           </UFormGroup>
         </UCard>
 
+        <UCard
+          ref="imagecard"
+          :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }"
+        >
+          <template #header>
+            <p class="font-bold">Images</p>
+          </template>
+
+          <ImageOrganizer :images="cat.images" @updatedImageOrder="newImages" />
+          <UButton
+            icon="i-heroicons-plus"
+            size="sm"
+            color="primary"
+            variant="link"
+            label="Add Image"
+            :trailing="false"
+            class="mt-4"
+            @click="imageModalOpen = true"
+          />
+          <UModal v-model="imageModalOpen">
+            <UCard>
+              <template #header>
+                <div class="flex items-center justify-between">
+                  <h3
+                    class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                  >
+                    Add Image
+                  </h3>
+                  <UButton
+                    color="gray"
+                    variant="ghost"
+                    icon="i-heroicons-x-mark-20-solid"
+                    class="-my-1"
+                    @click="imageModalOpen = false"
+                  />
+                </div>
+              </template>
+              <new-image @newImage="addNewImage" />
+            </UCard>
+          </UModal>
+        </UCard>
+
         <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
           <template #header>
             <p class="font-bold">Medical</p>
@@ -402,14 +465,8 @@ const links = [
             </UFormGroup>
           </div>
         </UCard>
-
-        <UCard ref="images" :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
-          <template #header>
-            <p class="font-bold">Images</p>
-          </template>
-          d
-        </UCard>
       </UForm>
     </UPageBody>
+    <UNotifications />
   </UPage>
 </template>

@@ -21,5 +21,11 @@ export default defineNuxtConfig({
     cloudinary: {
       baseURL: 'https://res.cloudinary.com/dwfcofnrd/image/fetch/'
     }
+  },
+
+  runtimeConfig: {
+    public: {
+      supaseImgBase: process.env.SUPABASE_IMG_BASE
+    }
   }
 })
