@@ -175,3 +175,8 @@ export function validateEmail(email: string) {
 
   return tester.test(email);
 };
+
+export async function updateCat(catObject: any, client: SupabaseClient) {
+  const catToUpdate = JSON.parse(JSON.stringify(catObject))
+  console.log(catToUpdate);
+}

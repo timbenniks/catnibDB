@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useThrottleFn } from "@vueuse/core";
-import { translateTreatmentLabel } from "../../lib/helpers";
+import { translateTreatmentLabel, updateCat } from "../../lib/helpers";
 
 const { params } = useRoute();
 const catId = Number(params.cat);
 const cat = await useCat(catId);
+const supabase = useSupabaseClient();
 
 const treatmentModalOpen = ref(false);
 const weightModalOpen = ref(false);
@@ -114,8 +115,9 @@ const saveThrottled = useThrottleFn(() => {
   save();
 }, 1000);
 
-function save() {
-  console.log(state.value);
+async function save() {
+  await updateCat(state.value, supabase);
+
   toast.add({
     id: "saved",
     title: "Saved",
