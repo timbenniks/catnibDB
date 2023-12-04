@@ -13,6 +13,10 @@ const state = reactive(cat);
 const toast = useToast();
 const imagecard = ref();
 
+const {
+  public: { supaseImgBase },
+} = useRuntimeConfig();
+
 function scrollToImages() {
   imagecard.value?.$el.scrollIntoView({ behavior: "smooth" });
 }
@@ -50,6 +54,15 @@ const weights = computed(() => {
   return result;
 });
 
+const images = computed(() => {
+  return cat.value.images
+    .trim()
+    .split(",")
+    .map((image: string, index: number) => {
+      return `${supaseImgBase}${image}`;
+    });
+});
+
 function selectHostFamily(fam: any) {
   state.value.host_family_id = fam;
   save();
@@ -79,8 +92,17 @@ function addNewImage(image: string) {
   save();
 }
 
-function newImages(images: any) {
-  state.value.images = images;
+function deleteImage(image: string) {
+  const cleanedUpImage = image.split(supaseImgBase)[1];
+
+  const imagesAsArray = state.value.images.split(",").map((image: string) => {
+    return image;
+  });
+
+  state.value.images = imagesAsArray
+    .filter((img: string) => img !== cleanedUpImage)
+    .toString();
+  console.log(state.value.images);
   save();
 }
 
@@ -307,7 +329,29 @@ const links = [
             <p class="font-bold">Images</p>
           </template>
 
-          <ImageOrganizer :images="cat.images" @updatedImageOrder="newImages" />
+          <div class="grid grid-cols-6 gap-4">
+            <div v-for="image in images" :key="image" class="relative">
+              <NuxtImg
+                provider="cloudinary"
+                :src="image"
+                width="160"
+                height="152"
+                fit="fill"
+                :modifiers="{ gravity: 'subject' }"
+                class="rounded-lg"
+              />
+              <UButton
+                icon="i-heroicons-x-mark"
+                size="xs"
+                color="primary"
+                variant="solid"
+                square
+                class="absolute right-1 bottom-1"
+                @click="deleteImage(image)"
+              />
+            </div>
+          </div>
+
           <UButton
             icon="i-heroicons-plus"
             size="sm"
