@@ -105,7 +105,7 @@ export async function updateAlgolia(cat: any) {
 
   catForAlgolia.objectID = cat.id
 
-  const algoliaObjectIds = await algoliaIndexManager
+  await algoliaIndexManager
     .saveObject(catForAlgolia, { autoGenerateObjectIDIfNotExist: true })
     .catch((err) => console.log(err))
 }
@@ -128,7 +128,7 @@ export async function weightsByCat(catId: number, client: SupabaseClient) {
   return data;
 }
 
-export function translateFacetLabel(label: string) {
+export function translateLabel(label: string) {
   let translated = '';
 
   switch (label) {
@@ -175,15 +175,7 @@ export function translateFacetLabel(label: string) {
     case "reserved":
       translated = "Reserved"
       break;
-  }
 
-  return translated;
-}
-
-export function translateTreatmentLabel(label: string) {
-  let translated = '';
-
-  switch (label) {
     case "vaccination_first":
       translated = "1st vaccination"
       break;
@@ -236,7 +228,7 @@ export function translateTreatmentLabel(label: string) {
   return translated;
 }
 
-export function addFacets(cat: any) {
+export function addFacets(cat: any, treatments: any) {
   const result: any = [];
 
   for (const [key, value] of Object.entries(cat)) {
@@ -249,6 +241,10 @@ export function addFacets(cat: any) {
     }
   }
 
+  treatments.forEach((treatment: any) => {
+    result.push(treatment.treatment_type)
+  });
+
   return result
 }
 
@@ -258,7 +254,7 @@ export async function addCatData(cat: any, client: SupabaseClient) {
 
   cat.treatments = treatments;
   cat.weights = weights;
-  cat.facets = addFacets(cat)
+  cat.facets = addFacets(cat, treatments)
 
   return cat
 }

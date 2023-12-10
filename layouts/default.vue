@@ -22,11 +22,8 @@ async function logout() {
 <template>
   <UHeader :links="links" :ui="{ container: 'max-w-full' }">
     <template #logo>
-      Libres Chats de Bastide<UBadge
-        label="v0.1"
-        variant="subtle"
-        class="mb-0.5"
-      />
+      CatnipDB <span class="font-light">Libres Chats de Bastide</span>
+      <UBadge label="v0.1" variant="subtle" class="mb-0.5" />
     </template>
 
     <template #right>

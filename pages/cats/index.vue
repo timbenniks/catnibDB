@@ -6,7 +6,15 @@ import {
   AisRefinementList,
 } from "vue-instantsearch/vue3/es";
 
-import { translateFacetLabel } from "../lib/helpers";
+import { history } from "instantsearch.js/es/lib/routers";
+import { simple } from "instantsearch.js/es/lib/stateMappings";
+
+const routing = {
+  router: history(),
+  stateMapping: simple(),
+};
+
+import { translateLabel } from "../lib/helpers";
 
 const indexName = "libres_chats";
 const algolia = useAlgoliaRef();
@@ -64,7 +72,7 @@ const selectedColumns = ref([...columns]);
 function transformItems(items: any) {
   return items.map((item: any) => ({
     ...item,
-    label: translateFacetLabel(item.label),
+    label: translateLabel(item.label),
   }));
 }
 
@@ -94,7 +102,11 @@ function select(row: any) {
 </script>
 
 <template>
-  <ais-instant-search :index-name="indexName" :search-client="algolia">
+  <ais-instant-search
+    :index-name="indexName"
+    :search-client="algolia"
+    :routing="routing"
+  >
     <UPage :ui="{ wrapper: 'max-w-full', left: 'pl-8' }">
       <template #left>
         <UAside>
@@ -156,6 +168,35 @@ function select(row: any) {
               </UCheckbox>
             </template>
           </ais-refinement-list>
+
+          <UDivider type="solid" class="my-6" />
+
+          <h3 class="font-bold mb-2">Famile d'adoption</h3>
+          <ais-refinement-list attribute="adoption_family_id.name">
+            <template v-slot:item="{ item, refine }">
+              <UCheckbox
+                color="primary"
+                :checked="item.isRefined"
+                :model-value="item.value"
+                @change="refine(item.value)"
+                :ui="{ wrapper: 'mb-1' }"
+              >
+                <template #label>
+                  <span class="space-x-2">
+                    <span>{{ item.label }}</span>
+                    <UBadge
+                      variant="subtle"
+                      size="xs"
+                      :ui="{ rounded: 'rounded-full' }"
+                    >
+                      {{ item.count }}
+                    </UBadge>
+                  </span>
+                </template>
+              </UCheckbox>
+            </template>
+          </ais-refinement-list>
+
           <UDivider type="solid" class="my-6" />
 
           <h3 class="font-bold mb-2">Sexe</h3>
@@ -206,6 +247,8 @@ function select(row: any) {
                     icon="i-heroicons-magnifying-glass-20-solid"
                     :loading="isSearchStalled"
                     :modelValue="currentRefinement"
+                    color="primary"
+                    variant="outline"
                     @input="refine($event.currentTarget.value)"
                   />
                 </template>

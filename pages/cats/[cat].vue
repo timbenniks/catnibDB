@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useThrottleFn } from "@vueuse/core";
-import { translateTreatmentLabel, updateCat } from "../../lib/helpers";
+import { translateLabel, updateCat } from "../../lib/helpers";
 
 const { params } = useRoute();
 const catId = Number(params.cat);
@@ -27,9 +27,7 @@ const treatments = computed(() => {
 
   cat.value.treatments.map((treatment: any) => {
     result.push({
-      label: `${treatment.date}: ${translateTreatmentLabel(
-        treatment.treatment_type
-      )} ${
+      label: `${treatment.date}: ${translateLabel(treatment.treatment_type)} ${
         treatment.treatment_outcome &&
         treatment.treatment_outcome !== "not_applicable"
           ? ` (${treatment.treatment_outcome})`
