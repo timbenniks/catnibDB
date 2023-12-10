@@ -1,4 +1,114 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import algoliasearch from "algoliasearch";
+
+export async function newCat(name: any, client: SupabaseClient) {
+  const newCat = {
+    name,
+
+    sex: "male",
+    images: "",
+    color: "",
+    chip_id: "",
+
+    birth_date: null,
+    adoption_date: null,
+    arrival_date: null,
+    protocol_date: null,
+    host_family_id: null,
+    adoption_family_id: null,
+
+    notes: "",
+    care_received: "",
+    character: "",
+    history: "",
+
+    reserved: false,
+    adopted: false,
+    deceased: false,
+    chipped: false,
+    certificate_healthy: false,
+    health_book: false,
+    sterilised: false,
+    with_dogs: false,
+    with_cats: false,
+    deed_of_transfer: false,
+  }
+
+  const { data, error } = await client
+    .from('cats')
+    .insert(newCat)
+    .select()
+    .single()
+
+  return { data, error }
+}
+
+export async function updateCat(catObject: any, client: SupabaseClient) {
+  const catToUpdate = JSON.parse(JSON.stringify(catObject))
+
+  const toSave = {
+    name: catToUpdate.name,
+    birth_date: catToUpdate.birth_date,
+    adoption_date: catToUpdate.adoption_date,
+    chipped: catToUpdate.chipped,
+    certificate_healthy: catToUpdate.certificate_healthy,
+    health_book: catToUpdate.health_book,
+    sterilised: catToUpdate.sterilised,
+    with_dogs: catToUpdate.with_dogs,
+    with_cats: catToUpdate.with_cats,
+    character: catToUpdate.character,
+    reserved: catToUpdate.reserved,
+    adopted: catToUpdate.adopted,
+    deceased: catToUpdate.deceased,
+    sex: catToUpdate.sex,
+    images: catToUpdate.images,
+    color: catToUpdate.color,
+    arrival_date: catToUpdate.arrival_date,
+    history: catToUpdate.history,
+    protocol_date: catToUpdate.protocol_date,
+    care_received: catToUpdate.care_received,
+    host_family_id: catToUpdate.host_family_id?.id || null,
+    adoption_family_id: catToUpdate.adoption_family_id?.id || null,
+    chip_id: catToUpdate.chip_id,
+    notes: catToUpdate.notes,
+    deed_of_transfer: catToUpdate.deed_of_transfer,
+  }
+
+  const { error } = await client
+    .from('cats')
+    .update(toSave)
+    .eq('id', catToUpdate.id)
+
+  let res: 'error' | 'success' = 'success'
+
+  if (error) {
+    res = 'error'
+  }
+
+  updateAlgolia(catObject)
+
+  return res
+}
+
+export async function updateAlgolia(cat: any) {
+  const { public: {
+    algoliaId, algoliaAdminApiKey, algoliaIndex }
+  } = useRuntimeConfig();
+
+  const algoliaClient = algoliasearch(
+    algoliaId,
+    algoliaAdminApiKey
+  )
+
+  const algoliaIndexManager = algoliaClient.initIndex(algoliaIndex)
+  const catForAlgolia = JSON.parse(JSON.stringify(cat))
+
+  catForAlgolia.objectID = cat.id
+
+  const algoliaObjectIds = await algoliaIndexManager
+    .saveObject(catForAlgolia, { autoGenerateObjectIDIfNotExist: true })
+    .catch((err) => console.log(err))
+}
 
 export async function treatmentsByCat(catId: number, client: SupabaseClient) {
   const { data } = await client
@@ -30,6 +140,14 @@ export function translateFacetLabel(label: string) {
       translated = "Chipped"
       break;
 
+    case "deceased":
+      translated = "Deceased"
+      break;
+
+    case "deed_of_transfer":
+      translated = "Deed of transfer"
+      break;
+
     case "health_book":
       translated = "Carnet De Santé"
       break;
@@ -52,6 +170,10 @@ export function translateFacetLabel(label: string) {
 
     case "with_dogs":
       translated = "Bon Avec Chiens"
+      break;
+
+    case "reserved":
+      translated = "Reserved"
       break;
   }
 
@@ -175,8 +297,3 @@ export function validateEmail(email: string) {
 
   return tester.test(email);
 };
-
-export async function updateCat(catObject: any, client: SupabaseClient) {
-  const catToUpdate = JSON.parse(JSON.stringify(catObject))
-  console.log(catToUpdate);
-}

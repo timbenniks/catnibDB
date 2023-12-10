@@ -56,12 +56,17 @@ const weights = computed(() => {
 });
 
 const images = computed(() => {
-  return cat.value.images
-    .trim()
-    .split(",")
-    .map((image: string, index: number) => {
-      return `${supaseImgBase}${image}`;
-    });
+  let result = [];
+  if (cat.value.images !== null) {
+    result = cat.value.images
+      .trim()
+      .split(",")
+      .map((image: string, index: number) => {
+        return `${supaseImgBase}${image}`;
+      });
+  }
+
+  return result;
 });
 
 function selectHostFamily(fam: any) {
@@ -74,28 +79,63 @@ function selectAdoptionFamily(fam: any) {
   save();
 }
 
-function addNewTreatment(treatment: any) {
+async function addNewTreatment(treatment: any) {
   state.value.treatments.push(treatment);
   treatmentModalOpen.value = false;
+  const { error } = await supabase.from("treatments").insert(treatment);
+
+  if (error) {
+    toast.add({
+      id: "error",
+      color: "rose",
+      title: "Error",
+      description: "There was an error saving the treatment",
+      icon: "i-heroicons-exclamation-triangle",
+      timeout: 2000,
+    });
+  }
+
   save();
 }
 
-function addNewWeight(weight: any) {
+async function addNewWeight(weight: any) {
   state.value.weights.push(weight);
   weightModalOpen.value = false;
+  const { error } = await supabase.from("weight").insert(weight);
+
+  if (error) {
+    toast.add({
+      id: "error",
+      color: "rose",
+      title: "Error",
+      description: "There was an error saving the weight",
+      icon: "i-heroicons-exclamation-triangle",
+      timeout: 2000,
+    });
+  }
+
   save();
 }
 
 function addNewImage(image: string) {
   let images = state.value.images;
-  state.value.images = `${images},${image}`;
+
+  if (images === "") {
+    state.value.images = image;
+  } else {
+    state.value.images = `${images},${image}`;
+  }
+
   imageModalOpen.value = false;
   save();
 }
 
 function deleteImage(image: string) {
-  const cleanedUpImage = image.split(supaseImgBase)[1];
+  if (state.value.images === null) {
+    return;
+  }
 
+  const cleanedUpImage = image.split(supaseImgBase)[1];
   const imagesAsArray = state.value.images.split(",").map((image: string) => {
     return image;
   });
@@ -103,7 +143,7 @@ function deleteImage(image: string) {
   state.value.images = imagesAsArray
     .filter((img: string) => img !== cleanedUpImage)
     .toString();
-  console.log(state.value.images);
+
   save();
 }
 
@@ -116,15 +156,26 @@ const saveThrottled = useThrottleFn(() => {
 }, 1000);
 
 async function save() {
-  await updateCat(state.value, supabase);
+  const result = await updateCat(state.value, supabase);
 
-  toast.add({
-    id: "saved",
-    title: "Saved",
-    description: "Information is automatically saved",
-    icon: "i-heroicons-check-badge",
-    timeout: 2000,
-  });
+  if (result === "error") {
+    toast.add({
+      id: "error",
+      color: "rose",
+      title: "Error",
+      description: "There was an error saving the weight",
+      icon: "i-heroicons-exclamation-triangle",
+      timeout: 2000,
+    });
+  } else {
+    toast.add({
+      id: "saved",
+      title: "Saved",
+      description: "Information is automatically saved",
+      icon: "i-heroicons-check-badge",
+      timeout: 2000,
+    });
+  }
 }
 
 const links = [
@@ -164,7 +215,7 @@ const links = [
             class="relative"
             :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }"
           >
-            <MainImage :images="cat.images" />
+            <MainImage :images="cat.images" v-if="cat.images !== ''" />
             <client-only>
               <UButton
                 icon="i-heroicons-pencil-square"
@@ -173,7 +224,11 @@ const links = [
                 variant="solid"
                 square
                 class="absolute right-8 bottom-8"
-                @click="scrollToImages"
+                @click="
+                  state.images === ''
+                    ? (imageModalOpen = true)
+                    : scrollToImages()
+                "
               />
             </client-only>
           </UCard>
@@ -252,7 +307,6 @@ const links = [
 
           <div class="grid grid-cols-2 gap-8">
             <FamilySelector
-              v-if="cat.host_family_id"
               label="Host Family"
               name="host_family_id"
               :fam-id="cat.host_family_id ? cat.host_family_id.id : false"
@@ -310,16 +364,28 @@ const links = [
             </UFormGroup>
 
             <UFormGroup label="History" name="history">
-              <UTextarea v-model="state.history" variant="outline" />
+              <UTextarea
+                v-model="state.history"
+                variant="outline"
+                @update:modelValue="saveThrottled"
+              />
             </UFormGroup>
           </div>
 
           <UFormGroup label="Care received" name="care_received" class="mb-8">
-            <UTextarea v-model="state.care_received" variant="outline" />
+            <UTextarea
+              v-model="state.care_received"
+              variant="outline"
+              @update:modelValue="saveThrottled"
+            />
           </UFormGroup>
 
           <UFormGroup label="Notes" name="notes">
-            <UTextarea v-model="state.notes" variant="outline" />
+            <UTextarea
+              v-model="state.notes"
+              variant="outline"
+              @update:modelValue="saveThrottled"
+            />
           </UFormGroup>
         </UCard>
 
@@ -332,7 +398,12 @@ const links = [
           </template>
 
           <div class="grid grid-cols-6 gap-4">
-            <div v-for="image in images" :key="image" class="relative">
+            <div
+              v-if="cat.images !== ''"
+              v-for="image in images"
+              :key="image"
+              class="relative"
+            >
               <NuxtImg
                 provider="cloudinary"
                 :src="image"
@@ -358,7 +429,7 @@ const links = [
             icon="i-heroicons-plus"
             size="sm"
             color="primary"
-            variant="link"
+            variant="soft"
             label="Add Image"
             :trailing="false"
             class="mt-4"
@@ -443,7 +514,7 @@ const links = [
                 icon="i-heroicons-plus"
                 size="sm"
                 color="primary"
-                variant="link"
+                variant="soft"
                 label="Add Treatment"
                 :trailing="false"
                 class="mt-4"
@@ -481,7 +552,7 @@ const links = [
                 icon="i-heroicons-plus"
                 size="sm"
                 color="primary"
-                variant="link"
+                variant="soft"
                 label="Add Weight"
                 :trailing="false"
                 class="mt-4"
@@ -512,6 +583,7 @@ const links = [
           </div>
         </UCard>
       </UForm>
+      <pre>{{ cat }}</pre>
     </UPageBody>
     <UNotifications />
   </UPage>

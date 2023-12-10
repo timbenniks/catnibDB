@@ -1,7 +1,6 @@
 <script setup lant="ts">
 const props = defineProps(["catid"]);
 const state = reactive({
-  id: "new",
   cat_id: props.catid,
   date: "",
   weight_gr: "",

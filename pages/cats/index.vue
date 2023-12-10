@@ -26,32 +26,36 @@ const links = [
 
 const columns = [
   {
-    key: "id",
-    label: "ID",
-  },
-  {
     key: "name",
     label: "Nom",
   },
   {
-    key: "sex",
-    label: "Sexe",
+    key: "color",
+    label: "Color",
   },
   {
-    key: "adopted",
-    label: "Adopte",
+    key: "birth_date",
+    label: "Birth Date",
+  },
+  {
+    key: "adoption_date",
+    label: "Adoption Date",
+  },
+  {
+    key: "arrival_date",
+    label: "Arrival Date",
+  },
+  {
+    key: "weight",
+    label: "Weight",
   },
   {
     key: "host_fam",
     label: "Famile d'accuil",
   },
   {
-    key: "birth_date",
-    label: "Date de naissance",
-  },
-  {
-    key: "history",
-    label: "Histoire",
+    key: "adoption_fam",
+    label: "Famile Adoption",
   },
 ];
 
@@ -69,11 +73,16 @@ function mapToTableRows(items: any) {
     return {
       id: item.id,
       name: item.name,
-      sex: item.sex,
-      adopted: item.adopted,
-      host_fam: item.adoption_family_id ? item.adoption_family_id.name : "none",
+      color: item.color,
       birth_date: item.birth_date,
-      history: item.history,
+      adoption_date: item.adoption_date ? item.adoption_date : "-",
+      arrival_date: item.arrival_date ? item.arrival_date : "-",
+      weight: item.weights[item.weights.length - 1].weight_gr,
+      host_fam: item.host_family_id ? item.host_family_id.name : "-",
+      adoption_fam: item.adoption_family_id
+        ? item.adoption_family_id.name
+        : "-",
+
       class: "bg-gray-50 dark:bg-gray-950",
     };
   });
@@ -201,6 +210,7 @@ function select(row: any) {
                   />
                 </template>
               </ais-search-box>
+
               <USelectMenu
                 v-model="selectedColumns"
                 :options="columns"

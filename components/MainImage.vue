@@ -14,6 +14,7 @@ const image = computed(() => {
 
 <template>
   <NuxtImg
+    v-if="images"
     provider="cloudinary"
     :src="image"
     width="500"
