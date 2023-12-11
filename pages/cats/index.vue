@@ -4,6 +4,7 @@ import {
   AisSearchBox,
   AisHits,
   AisRefinementList,
+  AisConfigure,
 } from "vue-instantsearch/vue3/es";
 
 import { history } from "instantsearch.js/es/lib/routers";
@@ -85,7 +86,9 @@ function mapToTableRows(items: any) {
       birth_date: item.birth_date,
       adoption_date: item.adoption_date ? item.adoption_date : "-",
       arrival_date: item.arrival_date ? item.arrival_date : "-",
-      weight: item.weights[item.weights.length - 1].weight_gr,
+      weight: item.weights.length
+        ? item.weights[item.weights.length - 1].weight_gr
+        : "-",
       host_fam: item.host_family_id ? item.host_family_id.name : "-",
       adoption_fam: item.adoption_family_id
         ? item.adoption_family_id.name
@@ -107,6 +110,7 @@ function select(row: any) {
     :search-client="algolia"
     :routing="routing"
   >
+    <ais-configure :hitsPerPage="100" />
     <UPage :ui="{ wrapper: 'max-w-full', left: 'pl-8' }">
       <template #left>
         <UAside>
