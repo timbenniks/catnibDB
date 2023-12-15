@@ -161,7 +161,7 @@ async function save() {
       id: "error",
       color: "rose",
       title: "Error",
-      description: "There was an error saving the weight",
+      description: "There was an error saving the cat",
       icon: "i-heroicons-exclamation-triangle",
       timeout: 2000,
     });
@@ -204,7 +204,7 @@ const links = [
             size="xl"
             variant="none"
             :ui="{ variant: { none: 'p-0' }, size: { xl: 'text-5xl' } }"
-            @blur="save"
+            @update:modelValue="saveThrottled"
           />
         </UFormGroup>
 
@@ -581,7 +581,6 @@ const links = [
           </div>
         </UCard>
       </UForm>
-      <pre>{{ cat }}</pre>
     </UPageBody>
     <UNotifications />
   </UPage>

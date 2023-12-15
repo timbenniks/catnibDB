@@ -90,6 +90,50 @@ export async function updateCat(catObject: any, client: SupabaseClient) {
   return res
 }
 
+export async function newFamily(name: any, client: SupabaseClient) {
+  const newFamily = {
+    name,
+
+    email: "",
+    phone: "",
+    address: "",
+    family_type: "host",
+  }
+
+  const { data, error } = await client
+    .from('families')
+    .insert(newFamily)
+    .select()
+    .single()
+
+  return { data, error }
+}
+
+export async function updateFamily(familyObject: any, client: SupabaseClient) {
+  const familyToUpdate = JSON.parse(JSON.stringify(familyObject))
+
+  const toSave = {
+    name: familyToUpdate.name,
+    email: familyToUpdate.email,
+    phone: familyToUpdate.phone,
+    address: familyToUpdate.address,
+    family_type: familyToUpdate.family_type,
+  }
+
+  const { error } = await client
+    .from('families')
+    .update(toSave)
+    .eq('id', familyToUpdate.id)
+
+  let res: 'error' | 'success' = 'success'
+
+  if (error) {
+    res = 'error'
+  }
+
+  return res
+}
+
 export async function updateAlgolia(cat: any) {
   const { public: {
     algoliaId, algoliaAdminApiKey, algoliaIndex }
