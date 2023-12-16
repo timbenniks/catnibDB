@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import algoliasearch from "algoliasearch";
+import slugify from '@sindresorhus/slugify';
 
 export async function newCat(name: any, client: SupabaseClient) {
   const newCat = {
@@ -124,6 +125,89 @@ export async function updateFamily(familyObject: any, client: SupabaseClient) {
     .from('families')
     .update(toSave)
     .eq('id', familyToUpdate.id)
+
+  let res: 'error' | 'success' = 'success'
+
+  if (error) {
+    res = 'error'
+  }
+
+  return res
+}
+
+export async function newPage(title: any, client: SupabaseClient) {
+  const newPage = {
+    title,
+
+    slug: slugify(title),
+    description: "",
+    image: "",
+    components: [],
+    published: false
+  }
+
+  const { data, error } = await client
+    .from('pages')
+    .insert(newPage)
+    .select()
+    .single()
+
+  return { data, error }
+}
+
+export async function updatePage(pageObject: any, client: SupabaseClient) {
+  const pageToUpdate = JSON.parse(JSON.stringify(pageObject))
+
+  const toSave = {
+    title: pageToUpdate.title,
+    slug: pageToUpdate.slug,
+    description: pageToUpdate.description,
+    image: pageToUpdate.image,
+    components: pageToUpdate.components,
+    published: pageToUpdate.published,
+  }
+
+  const { error } = await client
+    .from('pages')
+    .update(toSave)
+    .eq('id', pageObject.id)
+
+  let res: 'error' | 'success' = 'success'
+
+  if (error) {
+    res = 'error'
+  }
+
+  return res
+}
+
+export async function newComponent(title: any, client: SupabaseClient) {
+  const newComponent = {
+    title,
+    fields: [],
+  }
+
+  const { data, error } = await client
+    .from('components')
+    .insert(newComponent)
+    .select()
+    .single()
+
+  return { data, error }
+}
+
+export async function updateComponent(componentObject: any, client: SupabaseClient) {
+  const componentToUpdate = JSON.parse(JSON.stringify(componentObject))
+
+  const toSave = {
+    title: componentToUpdate.title,
+    fields: componentToUpdate.fields,
+  }
+
+  const { error } = await client
+    .from('pages')
+    .update(toSave)
+    .eq('id', componentToUpdate.id)
 
   let res: 'error' | 'success' = 'success'
 

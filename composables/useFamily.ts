@@ -1,4 +1,3 @@
-// import { addCatData } from "../lib/helpers"
 export async function useFamily(famId: number) {
   const client = useSupabaseClient();
 

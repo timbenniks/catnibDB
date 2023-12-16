@@ -10,7 +10,6 @@ useHead({
 </script>
 <template>
   <NuxtLayout>
-    <NuxtLoadingIndicator color="red" :throttle="10" />
     <NuxtPage />
   </NuxtLayout>
 </template>

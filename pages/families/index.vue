@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { translateLabel } from "../lib/helpers";
-
 const families = await useFamilies();
 
 const links = [

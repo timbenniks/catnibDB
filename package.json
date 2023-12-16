@@ -19,6 +19,7 @@
     "@nuxt/image": "^1.1.0",
     "@nuxt/ui-pro": "^0.6.1",
     "@nuxtjs/algolia": "^1.10.1",
+    "@sindresorhus/slugify": "^2.2.1",
     "@types/uuid": "^9.0.7",
     "@vueuse/core": "^10.7.0",
     "chart.js": "^4.4.1",

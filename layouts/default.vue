@@ -1,16 +1,20 @@
 <script setup lang="ts">
 const links = [
   {
-    label: "Cats",
+    label: "Dashboard",
     to: "/",
+  },
+  {
+    label: "Cats",
+    to: "/cats",
   },
   {
     label: "Foster Families",
     to: "/families",
   },
   {
-    label: "Requests",
-    to: "/families/requests",
+    label: "Site builder",
+    to: "/sitebuilder",
   },
 ];
 

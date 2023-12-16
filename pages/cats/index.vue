@@ -24,7 +24,7 @@ const links = [
   {
     label: "All cats",
     icon: "i-heroicons-list-bullet",
-    to: "/",
+    to: "/cats",
   },
   {
     label: "Add new cat",
@@ -229,8 +229,7 @@ function select(row: any) {
             </template>
           </ais-refinement-list>
 
-          <template #bottom>
-            <UDivider type="solid" class="my-6" />
+          <template #top>
             <UPageLinks :links="links" />
           </template>
         </UAside>
