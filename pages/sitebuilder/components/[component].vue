@@ -84,6 +84,14 @@ const links = [
           />
         </UFormGroup>
 
+        <ul class="my-8">
+          <li>Text</li>
+          <li>Rich text</li>
+          <li>Dropdown</li>
+          <li>Checkbox</li>
+          <li>Image</li>
+        </ul>
+
         <UButton type="submit"> Save </UButton>
       </UForm>
       <pre>{{ state }}</pre>
