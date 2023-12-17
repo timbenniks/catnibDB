@@ -10,6 +10,21 @@ const supabase = useSupabaseClient();
 const state = reactive(component);
 const toast = useToast();
 
+function addField(type: string) {
+  const field = {
+    type,
+    id: "",
+    label: "",
+    values: "",
+  };
+
+  if (type === "dropdown") {
+    field.values = "option1|option2";
+  }
+
+  state.value.fields.push(field);
+}
+
 async function onSubmit() {
   save();
 }
@@ -84,17 +99,93 @@ const links = [
           />
         </UFormGroup>
 
-        <ul class="my-8">
-          <li>Text</li>
-          <li>Rich text</li>
-          <li>Dropdown</li>
-          <li>Checkbox</li>
-          <li>Image</li>
-        </ul>
+        <div class="space-x-2">
+          <UButton
+            label="Text"
+            color="primary"
+            variant="soft"
+            @click="addField('text')"
+            icon="i-heroicons-plus"
+          />
+          <UButton
+            label="Rich text"
+            color="primary"
+            variant="soft"
+            @click="addField('rich_text')"
+            icon="i-heroicons-plus"
+          />
+          <UButton
+            label="Dropdown"
+            color="primary"
+            variant="soft"
+            @click="addField('dropdown')"
+            icon="i-heroicons-plus"
+          />
+          <UButton
+            label="Checkbox"
+            color="primary"
+            variant="soft"
+            @click="addField('checkbox')"
+            icon="i-heroicons-plus"
+          />
+          <UButton
+            label="Image"
+            color="primary"
+            variant="soft"
+            @click="addField('image')"
+            icon="i-heroicons-plus"
+          />
+        </div>
+
+        <UCard
+          v-for="(field, index) in state.fields"
+          :ui="{ base: '', background: 'bg-gray-50 dark:bg-gray-950' }"
+        >
+          <template #header>
+            <p class="font-bold">{{ field.type }} field</p>
+          </template>
+          <div class="grid grid-cols-2 gap-8">
+            <UFormGroup
+              label="API ID"
+              name="id"
+              description="API ID, use camel case"
+            >
+              <UInput
+                v-model="state.fields[index].id"
+                name="id"
+                placeholder="Field ID"
+              />
+            </UFormGroup>
+
+            <UFormGroup
+              label="Label"
+              name="label"
+              description="Human readable label"
+            >
+              <UInput
+                v-model="state.fields[index].label"
+                name="label"
+                placeholder="Field label"
+              />
+            </UFormGroup>
+
+            <UFormGroup
+              description="Please use value|value|value"
+              label="Values"
+              name="values"
+              v-if="field.values"
+            >
+              <UInput
+                v-model="state.fields[index].values"
+                name="values"
+                placeholder="Field values"
+              />
+            </UFormGroup>
+          </div>
+        </UCard>
 
         <UButton type="submit"> Save </UButton>
       </UForm>
-      <pre>{{ state }}</pre>
     </UPageBody>
     <UNotifications />
   </UPage>

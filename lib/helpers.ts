@@ -205,7 +205,7 @@ export async function updateComponent(componentObject: any, client: SupabaseClie
   }
 
   const { error } = await client
-    .from('pages')
+    .from('components')
     .update(toSave)
     .eq('id', componentToUpdate.id)
 
