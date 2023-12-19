@@ -22,6 +22,7 @@
     "@sindresorhus/slugify": "^2.2.1",
     "@types/uuid": "^9.0.7",
     "@vueuse/core": "^10.7.0",
+    "camelcase": "^8.0.0",
     "chart.js": "^4.4.1",
     "uuid": "^9.0.1",
     "vue-chart-3": "^3.1.8",

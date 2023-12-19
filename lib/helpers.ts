@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import algoliasearch from "algoliasearch";
 import slugify from '@sindresorhus/slugify';
+import camelCase from "camelcase";
 
 export async function newCat(name: any, client: SupabaseClient) {
   const newCat = {
@@ -181,9 +182,25 @@ export async function updatePage(pageObject: any, client: SupabaseClient) {
   return res
 }
 
+export async function deletePage(pageId: number, client: SupabaseClient) {
+  const { error } = await client
+    .from('pages')
+    .delete()
+    .eq('id', pageId)
+
+  let res: 'error' | 'success' = 'success'
+
+  if (error) {
+    res = 'error'
+  }
+
+  return res
+}
+
 export async function newComponent(title: any, client: SupabaseClient) {
   const newComponent = {
     title,
+    api_id: camelCase(title),
     fields: [],
   }
 
@@ -201,6 +218,7 @@ export async function updateComponent(componentObject: any, client: SupabaseClie
 
   const toSave = {
     title: componentToUpdate.title,
+    api_id: componentToUpdate.api_id,
     fields: componentToUpdate.fields,
   }
 
@@ -208,6 +226,21 @@ export async function updateComponent(componentObject: any, client: SupabaseClie
     .from('components')
     .update(toSave)
     .eq('id', componentToUpdate.id)
+
+  let res: 'error' | 'success' = 'success'
+
+  if (error) {
+    res = 'error'
+  }
+
+  return res
+}
+
+export async function deleteComponent(componentId: number, client: SupabaseClient) {
+  const { error } = await client
+    .from('components')
+    .delete()
+    .eq('id', componentId)
 
   let res: 'error' | 'success' = 'success'
 
@@ -263,93 +296,86 @@ export function translateLabel(label: string) {
     case "certificate_healthy":
       translated = "Certificate Medicale"
       break;
-
     case "chipped":
       translated = "Chipped"
       break;
-
     case "deceased":
       translated = "Deceased"
       break;
-
     case "deed_of_transfer":
       translated = "Deed of transfer"
       break;
-
     case "health_book":
       translated = "Carnet De Santé"
       break;
-
     case "protocol_date":
       translated = "Protocole"
       break;
-
     case "adopted":
       translated = "Adopte"
       break;
-
     case "sterilised":
       translated = "Stérilisée"
       break;
-
     case "with_cats":
       translated = "Bon Avec Chats"
       break;
-
     case "with_dogs":
       translated = "Bon Avec Chiens"
       break;
-
     case "reserved":
       translated = "Reserved"
       break;
-
     case "vaccination_first":
       translated = "1st vaccination"
       break;
-
     case "vaccination_second":
       translated = "2nd vaccination"
       break;
-
     case "test_fiv":
       translated = "Tested for FIV"
       break;
-
     case "test_felv":
       translated = "Tested for FELV"
       break;
-
     case "deworm":
       translated = "Dewormed"
       break;
-
     case "antiparasite_internal":
       translated = "Internal antiparasite"
       break;
-
     case "antiparasite_external":
       translated = "External antiparasite"
       break;
-
     case "corona":
       translated = "Corona"
       break;
-
     case "giardiasis":
       translated = "Giardiasis"
       break;
-
     case "ringworm":
       translated = "Ringworm"
       break;
-
     case "diarrhea":
       translated = "Diarrhea"
       break;
-
     case "cat_fluother":
       translated = "Cat fluother"
+      break;
+    case "text":
+      translated = "Text"
+      break;
+    case "rich_text":
+      translated = "Rich Text"
+      break;
+    case "dropdown":
+      translated = "Drop down"
+      break;
+    case "checkbox":
+      translated = "Checkbox"
+      break;
+    case "image":
+      translated = "Image"
       break;
   }
 

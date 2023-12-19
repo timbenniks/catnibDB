@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useThrottleFn } from "@vueuse/core";
-import { updatePage } from "../../../lib/helpers";
+import { updatePage, deletePage } from "../../../lib/helpers";
 
 const { params } = useRoute();
 const pageId = Number(params.page);
@@ -52,6 +52,11 @@ function addNewImage(image: string) {
 
   imageModalOpen.value = false;
   save();
+}
+
+async function delPage() {
+  await deletePage(state.value.id, supabase);
+  navigateTo("/sitebuilder/pages");
 }
 
 const links = [
@@ -170,8 +175,9 @@ const links = [
           </UCard>
         </div>
         <UButton type="submit"> Save </UButton>
+        <UButton variant="link" color="rose" @click="delPage">Delete </UButton>
       </UForm>
-      <pre>{{ page }}</pre>
+      <pre class="mt-12">{{ page }}</pre>
     </UPageBody>
     <UNotifications />
   </UPage>

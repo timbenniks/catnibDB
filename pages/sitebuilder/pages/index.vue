@@ -34,6 +34,10 @@ const columns = [
     label: "Slug",
   },
   {
+    key: "status",
+    label: "Status",
+  },
+  {
     key: "created_at",
     label: "Created At",
   },
@@ -47,7 +51,8 @@ function mapToTableRows(items: any) {
       id: item.id,
       slug: item.slug ? item.slug : "-",
       title: item.title ? item.title : "-",
-      created_at: item.created_at,
+      status: item.published ? "published" : "draft",
+      created_at: new Date(item.created_at).toLocaleString("fr-FR"),
       class: "bg-gray-50 dark:bg-gray-950",
     };
   });

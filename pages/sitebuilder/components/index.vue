@@ -42,7 +42,7 @@ function mapToTableRows(items: any) {
     return {
       id: item.id,
       title: item.title,
-      created_at: item.created_at,
+      created_at: new Date(item.created_at).toLocaleString("fr-FR"),
       class: "bg-gray-50 dark:bg-gray-950",
     };
   });

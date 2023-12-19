@@ -112,6 +112,7 @@ const links = [
             </UFormGroup>
           </div>
         </UCard>
+        <UButton type="submit"> Save </UButton>
       </UForm>
     </UPageBody>
     <UNotifications />

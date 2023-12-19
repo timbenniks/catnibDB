@@ -204,7 +204,7 @@ const links = [
             size="xl"
             variant="none"
             :ui="{ variant: { none: 'p-0' }, size: { xl: 'text-5xl' } }"
-            @update:modelValue="saveThrottled"
+            @blur="save"
           />
         </UFormGroup>
 
@@ -264,6 +264,7 @@ const links = [
             </UFormGroup>
           </UCard>
         </div>
+        <UButton type="submit"> Save </UButton>
 
         <UCard :ui="{ base: '', background: 'bg-gray-50 dark:bg-gray-950' }">
           <template #header>
@@ -331,7 +332,7 @@ const links = [
               <UInput
                 name="color"
                 v-model="state.color"
-                @update:modelValue="saveThrottled"
+                @blur="save"
                 variant="outline"
               />
             </UFormGroup>
@@ -356,7 +357,7 @@ const links = [
             <UFormGroup label="Character" name="character">
               <UTextarea
                 v-model="state.character"
-                @update:modelValue="saveThrottled"
+                @blur="save"
                 variant="outline"
               />
             </UFormGroup>
@@ -365,7 +366,7 @@ const links = [
               <UTextarea
                 v-model="state.history"
                 variant="outline"
-                @update:modelValue="saveThrottled"
+                @blur="save"
               />
             </UFormGroup>
           </div>
@@ -374,16 +375,12 @@ const links = [
             <UTextarea
               v-model="state.care_received"
               variant="outline"
-              @update:modelValue="saveThrottled"
+              @blur="save"
             />
           </UFormGroup>
 
           <UFormGroup label="Notes" name="notes">
-            <UTextarea
-              v-model="state.notes"
-              variant="outline"
-              @update:modelValue="saveThrottled"
-            />
+            <UTextarea v-model="state.notes" variant="outline" @blur="save" />
           </UFormGroup>
         </UCard>
 
@@ -494,7 +491,7 @@ const links = [
               <UInput
                 name="color"
                 v-model="state.chip_id"
-                @update:modelValue="saveThrottled"
+                @blur="save"
                 variant="outline"
               />
             </UFormGroup>
@@ -580,6 +577,7 @@ const links = [
             </UFormGroup>
           </div>
         </UCard>
+        <UButton type="submit"> Save </UButton>
       </UForm>
     </UPageBody>
     <UNotifications />

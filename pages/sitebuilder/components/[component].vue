@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { useThrottleFn } from "@vueuse/core";
-import { updateComponent } from "../../../lib/helpers";
+import {
+  updateComponent,
+  deleteComponent,
+  translateLabel,
+} from "../../../lib/helpers";
+import camelCase from "camelcase";
 
 const { params } = useRoute();
 const componentId = Number(params.component);
@@ -22,16 +26,17 @@ function addField(type: string) {
     field.values = "option1|option2";
   }
 
-  state.value.fields.push(field);
+  state.value?.fields.push(field);
+}
+
+function removeField(index: number) {
+  state.value?.fields.splice(index, 1);
+  save();
 }
 
 async function onSubmit() {
   save();
 }
-
-const saveThrottled = useThrottleFn(() => {
-  save();
-}, 1000);
 
 async function save() {
   const result = await updateComponent(state.value, supabase);
@@ -54,6 +59,11 @@ async function save() {
       timeout: 2000,
     });
   }
+}
+
+async function delComponent() {
+  await deleteComponent(state.value.id, supabase);
+  navigateTo("/sitebuilder/components");
 }
 
 const links = [
@@ -95,41 +105,53 @@ const links = [
             size="xl"
             variant="none"
             :ui="{ variant: { none: 'p-0' }, size: { xl: 'text-5xl' } }"
-            @update:modelValue="saveThrottled"
+            @blur="save()"
+          />
+        </UFormGroup>
+        <UFormGroup label="API ID" name="api_id" description="Use camel case">
+          <UInput
+            v-model="state.api_id"
+            name="api_id"
+            required
+            placeholder="Component API ID"
+            @blur="
+              state.api_id = camelCase(state.api_id);
+              save();
+            "
           />
         </UFormGroup>
 
         <div class="space-x-2">
           <UButton
-            label="Text"
+            :label="translateLabel('text')"
             color="primary"
             variant="soft"
             @click="addField('text')"
             icon="i-heroicons-plus"
           />
           <UButton
-            label="Rich text"
+            :label="translateLabel('rich_text')"
             color="primary"
             variant="soft"
             @click="addField('rich_text')"
             icon="i-heroicons-plus"
           />
           <UButton
-            label="Dropdown"
+            :label="translateLabel('dropdown')"
             color="primary"
             variant="soft"
             @click="addField('dropdown')"
             icon="i-heroicons-plus"
           />
           <UButton
-            label="Checkbox"
+            :label="translateLabel('checkbox')"
             color="primary"
             variant="soft"
             @click="addField('checkbox')"
             icon="i-heroicons-plus"
           />
           <UButton
-            label="Image"
+            :label="translateLabel('image')"
             color="primary"
             variant="soft"
             @click="addField('image')"
@@ -142,18 +164,29 @@ const links = [
           :ui="{ base: '', background: 'bg-gray-50 dark:bg-gray-950' }"
         >
           <template #header>
-            <p class="font-bold">{{ field.type }} field</p>
+            <div class="flex justify-between">
+              <p class="font-bold text-xl">
+                {{ translateLabel(field.type) }} field
+              </p>
+              <UButton
+                icon="i-heroicons-x-mark"
+                size="xs"
+                color="primary"
+                square
+                variant="solid"
+                @click="removeField(index)"
+              />
+            </div>
           </template>
           <div class="grid grid-cols-2 gap-8">
-            <UFormGroup
-              label="API ID"
-              name="id"
-              description="API ID, use camel case"
-            >
+            <UFormGroup label="API ID" name="id" description="Use camel case">
               <UInput
                 v-model="state.fields[index].id"
                 name="id"
-                placeholder="Field ID"
+                placeholder="Field API ID"
+                @blur="
+                  state.fields[index].id = camelCase(state.fields[index].id)
+                "
               />
             </UFormGroup>
 
@@ -185,6 +218,9 @@ const links = [
         </UCard>
 
         <UButton type="submit"> Save </UButton>
+        <UButton variant="link" color="rose" @click="delComponent"
+          >Delete
+        </UButton>
       </UForm>
     </UPageBody>
     <UNotifications />
