@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useThrottleFn } from "@vueuse/core";
 import { updatePage, deletePage } from "../../../lib/helpers";
+import type { DraggableComponents } from "#build/components";
 
 const { params } = useRoute();
 const pageId = Number(params.page);
@@ -177,6 +178,8 @@ const links = [
         <UButton type="submit"> Save </UButton>
         <UButton variant="link" color="rose" @click="delPage">Delete </UButton>
       </UForm>
+      <DraggableComponents />
+
       <pre class="mt-12">{{ page }}</pre>
     </UPageBody>
     <UNotifications />
