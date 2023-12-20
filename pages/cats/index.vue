@@ -22,14 +22,9 @@ const algolia = useAlgoliaRef();
 
 const links = [
   {
-    label: "All cats",
+    label: "Cat overview",
     icon: "i-heroicons-list-bullet",
     to: "/cats",
-  },
-  {
-    label: "Add new cat",
-    icon: "i-heroicons-plus",
-    to: "/cats/new",
   },
 ];
 
@@ -237,26 +232,34 @@ function select(row: any) {
       <UPageBody>
         <ais-hits>
           <template v-slot="{ items }">
-            <div
-              class="flex justify-between py-3.5 border-b border-gray-200 dark:border-gray-700"
-            >
-              <ais-search-box>
-                <template
-                  v-slot="{ currentRefinement, isSearchStalled, refine }"
+            <div class="flex justify-between pr-4 mb-8">
+              <div class="flex gap-4">
+                <UButton
+                  icon="i-heroicons-pencil-square"
+                  size="sm"
+                  color="primary"
+                  variant="solid"
+                  to="/cats/new"
                 >
-                  <UInput
-                    type="search"
-                    placeholder="Recherche chat"
-                    icon="i-heroicons-magnifying-glass-20-solid"
-                    :loading="isSearchStalled"
-                    :modelValue="currentRefinement"
-                    color="primary"
-                    variant="outline"
-                    @input="refine($event.currentTarget.value)"
-                  />
-                </template>
-              </ais-search-box>
-
+                  New Cat
+                </UButton>
+                <ais-search-box>
+                  <template
+                    v-slot="{ currentRefinement, isSearchStalled, refine }"
+                  >
+                    <UInput
+                      type="search"
+                      placeholder="Recherche chat"
+                      icon="i-heroicons-magnifying-glass-20-solid"
+                      :loading="isSearchStalled"
+                      :modelValue="currentRefinement"
+                      color="primary"
+                      variant="outline"
+                      @input="refine($event.currentTarget.value)"
+                    />
+                  </template>
+                </ais-search-box>
+              </div>
               <USelectMenu
                 v-model="selectedColumns"
                 :options="columns"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useThrottleFn } from "@vueuse/core";
-import { updateFamily } from "../../lib/helpers";
+import { updateFamily, deleteFamily } from "../../lib/helpers";
 
 const { params } = useRoute();
 const familyId = Number(params.family);
@@ -9,6 +9,11 @@ const family = await useFamily(familyId);
 const supabase = useSupabaseClient();
 const state = reactive(family);
 const toast = useToast();
+
+async function delFamily() {
+  await deleteFamily(state.value.id, supabase);
+  navigateTo("/families");
+}
 
 async function onSubmit() {
   save();
@@ -43,14 +48,9 @@ async function save() {
 
 const links = [
   {
-    label: "All Families",
+    label: "Family Overview",
     icon: "i-heroicons-list-bullet",
     to: "/families",
-  },
-  {
-    label: "Add new family",
-    icon: "i-heroicons-plus",
-    to: "/families/new",
   },
 ];
 </script>
@@ -113,6 +113,7 @@ const links = [
           </div>
         </UCard>
         <UButton type="submit"> Save </UButton>
+        <UButton variant="link" color="rose" @click="delFamily">Delete</UButton>
       </UForm>
     </UPageBody>
     <UNotifications />

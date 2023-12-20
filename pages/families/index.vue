@@ -3,14 +3,9 @@ const families = await useFamilies();
 
 const links = [
   {
-    label: "All Families",
+    label: "Family Overview",
     icon: "i-heroicons-list-bullet",
     to: "/families",
-  },
-  {
-    label: "Add new family",
-    icon: "i-heroicons-plus",
-    to: "/families/new",
   },
 ];
 
@@ -67,6 +62,16 @@ function select(row: any) {
       </UAside>
     </template>
     <UPageBody>
+      <UButton
+        icon="i-heroicons-pencil-square"
+        size="sm"
+        color="primary"
+        variant="solid"
+        to="/families/new"
+        class="mb-8"
+      >
+        New Family
+      </UButton>
       <UTable
         :columns="selectedColumns"
         :rows="mapToTableRows(families)"

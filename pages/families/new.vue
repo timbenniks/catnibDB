@@ -20,14 +20,9 @@ async function onSubmit() {
 
 const links = [
   {
-    label: "All Families",
+    label: "Family Overview",
     icon: "i-heroicons-list-bullet",
     to: "/families",
-  },
-  {
-    label: "Add new family",
-    icon: "i-heroicons-plus",
-    to: "/families/new",
   },
 ];
 </script>

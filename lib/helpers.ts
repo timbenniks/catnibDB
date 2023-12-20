@@ -92,6 +92,21 @@ export async function updateCat(catObject: any, client: SupabaseClient) {
   return res
 }
 
+export async function deleteCat(catId: number, client: SupabaseClient) {
+  const { error } = await client
+    .from('cats')
+    .delete()
+    .eq('id', catId)
+
+  let res: 'error' | 'success' = 'success'
+
+  if (error) {
+    res = 'error'
+  }
+
+  return res
+}
+
 export async function newFamily(name: any, client: SupabaseClient) {
   const newFamily = {
     name,
@@ -126,6 +141,21 @@ export async function updateFamily(familyObject: any, client: SupabaseClient) {
     .from('families')
     .update(toSave)
     .eq('id', familyToUpdate.id)
+
+  let res: 'error' | 'success' = 'success'
+
+  if (error) {
+    res = 'error'
+  }
+
+  return res
+}
+
+export async function deleteFamily(famId: number, client: SupabaseClient) {
+  const { error } = await client
+    .from('families')
+    .delete()
+    .eq('id', famId)
 
   let res: 'error' | 'success' = 'success'
 

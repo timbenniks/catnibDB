@@ -3,24 +3,14 @@ const pages = await usePages();
 
 const links = [
   {
-    label: "All Pages",
+    label: "Pages",
     icon: "i-heroicons-clipboard-document-list",
     to: "/sitebuilder/pages",
   },
   {
-    label: "Add new page",
-    icon: "i-heroicons-document-plus",
-    to: "/sitebuilder/pages/new",
-  },
-  {
-    label: "All Components",
+    label: "Components",
     icon: "i-heroicons-code-bracket-square",
     to: "/sitebuilder/components",
-  },
-  {
-    label: "Add new component",
-    icon: "i-heroicons-plus",
-    to: "/sitebuilder/components/new",
   },
 ];
 
@@ -71,6 +61,16 @@ function select(row: any) {
       </UAside>
     </template>
     <UPageBody>
+      <UButton
+        icon="i-heroicons-pencil-square"
+        size="sm"
+        color="primary"
+        variant="solid"
+        to="/sitebuilder/pages/new"
+        class="mb-8"
+      >
+        New Page
+      </UButton>
       <UTable
         :columns="selectedColumns"
         :rows="mapToTableRows(pages)"

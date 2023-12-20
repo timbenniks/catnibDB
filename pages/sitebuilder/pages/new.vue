@@ -20,24 +20,14 @@ async function onSubmit() {
 
 const links = [
   {
-    label: "All Pages",
+    label: "Pages",
     icon: "i-heroicons-clipboard-document-list",
     to: "/sitebuilder/pages",
   },
   {
-    label: "Add new page",
-    icon: "i-heroicons-document-plus",
-    to: "/sitebuilder/pages/new",
-  },
-  {
-    label: "All Components",
+    label: "Components",
     icon: "i-heroicons-code-bracket-square",
     to: "/sitebuilder/components",
-  },
-  {
-    label: "Add new component",
-    icon: "i-heroicons-plus",
-    to: "/sitebuilder/components/new",
   },
 ];
 </script>

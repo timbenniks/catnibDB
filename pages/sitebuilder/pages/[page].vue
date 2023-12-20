@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useThrottleFn } from "@vueuse/core";
 import { updatePage, deletePage } from "../../../lib/helpers";
-import type { DraggableComponents } from "#build/components";
 
 const { params } = useRoute();
 const pageId = Number(params.page);
@@ -10,6 +9,8 @@ const page = await usePage(pageId);
 const supabase = useSupabaseClient();
 const state = reactive(page);
 const toast = useToast();
+
+const availableComponents = await useComponents();
 
 const {
   public: { supaseImgBase },
@@ -62,24 +63,14 @@ async function delPage() {
 
 const links = [
   {
-    label: "All Pages",
+    label: "Pages",
     icon: "i-heroicons-clipboard-document-list",
     to: "/sitebuilder/pages",
   },
   {
-    label: "Add new page",
-    icon: "i-heroicons-document-plus",
-    to: "/sitebuilder/pages/new",
-  },
-  {
-    label: "All Components",
+    label: "Components",
     icon: "i-heroicons-code-bracket-square",
     to: "/sitebuilder/components",
-  },
-  {
-    label: "Add new component",
-    icon: "i-heroicons-plus",
-    to: "/sitebuilder/components/new",
   },
 ];
 </script>
@@ -176,9 +167,12 @@ const links = [
           </UCard>
         </div>
         <UButton type="submit"> Save </UButton>
-        <UButton variant="link" color="rose" @click="delPage">Delete </UButton>
+        <UButton variant="link" color="rose" @click="delPage">Delete</UButton>
       </UForm>
-      <DraggableComponents />
+      <DraggableComponents
+        :availableComponents="availableComponents"
+        :pageComponents="state.components || []"
+      />
 
       <pre class="mt-12">{{ page }}</pre>
     </UPageBody>

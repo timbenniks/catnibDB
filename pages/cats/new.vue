@@ -20,14 +20,9 @@ async function onSubmit() {
 
 const links = [
   {
-    label: "All cats",
+    label: "Cat overview",
     icon: "i-heroicons-list-bullet",
-    to: "/",
-  },
-  {
-    label: "Add new cat",
-    icon: "i-heroicons-plus",
-    to: "/cats/new",
+    to: "/cats",
   },
 ];
 </script>

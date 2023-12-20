@@ -1,3 +1,18 @@
+<script lang="ts" setup>
+import { VueDraggable } from "vue-draggable-plus";
+
+const props = defineProps(["pageComponents", "availableComponents"]);
+
+const list1 = ref(props.availableComponents);
+const list2 = ref(props.pageComponents || []);
+
+function clone(element: any) {
+  return {
+    element,
+  };
+}
+</script>
+
 <template>
   <div class="flex flex-col">
     <VueDraggable
@@ -14,9 +29,10 @@
         :key="item.id"
         class="cursor-move h-50px bg-gray-500/5 rounded p-3"
       >
-        {{ item.name }}
+        {{ item.title }}
       </div>
     </VueDraggable>
+
     <VueDraggable
       v-model="list2"
       animation="150"
@@ -29,41 +45,8 @@
         :key="item.id"
         class="cursor-move h-50px bg-gray-500/5 rounded p-3"
       >
-        {{ item.name }}
+        <pre>{{ item }}</pre>
       </div>
     </VueDraggable>
   </div>
 </template>
-
-<script lang="ts" setup>
-import { VueDraggable } from "vue-draggable-plus";
-
-const list1 = ref([
-  {
-    name: "Joao",
-    id: "1",
-  },
-  {
-    name: "Jean",
-    id: "2",
-  },
-  {
-    name: "Johanna",
-    id: "3",
-  },
-  {
-    name: "Juan",
-    id: "4",
-  },
-]);
-
-const list2 = ref([]);
-
-function clone(element: Record<"name" | "id", string>) {
-  const len = list2.value.length;
-  return {
-    name: `${element.name}-clone-${len}`,
-    id: `${element.id}-clone-${len}`,
-  };
-}
-</script>

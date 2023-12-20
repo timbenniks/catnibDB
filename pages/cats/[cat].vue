@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useThrottleFn } from "@vueuse/core";
-import { translateLabel, updateCat } from "../../lib/helpers";
+import { translateLabel, updateCat, deleteCat } from "../../lib/helpers";
 
 const { params } = useRoute();
 const catId = Number(params.cat);
@@ -149,9 +148,10 @@ async function onSubmit() {
   save();
 }
 
-const saveThrottled = useThrottleFn(() => {
-  save();
-}, 1000);
+async function delCat() {
+  await deleteCat(state.value.id, supabase);
+  navigateTo("/cats");
+}
 
 async function save() {
   const result = await updateCat(state.value, supabase);
@@ -178,14 +178,9 @@ async function save() {
 
 const links = [
   {
-    label: "All cats",
+    label: "Cat overview",
     icon: "i-heroicons-list-bullet",
-    to: "/",
-  },
-  {
-    label: "Add new cat",
-    icon: "i-heroicons-plus",
-    to: "/cats/new",
+    to: "/cats",
   },
 ];
 </script>
@@ -577,7 +572,8 @@ const links = [
             </UFormGroup>
           </div>
         </UCard>
-        <UButton type="submit"> Save </UButton>
+        <UButton type="submit"> Save </UButton
+        ><UButton variant="link" color="rose" @click="delCat">Delete</UButton>
       </UForm>
     </UPageBody>
     <UNotifications />
