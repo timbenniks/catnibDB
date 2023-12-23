@@ -20,6 +20,8 @@ function addField(type: string) {
     id: "",
     label: "",
     values: "",
+    content: "",
+    required: false,
   };
 
   if (type === "dropdown") {
@@ -202,6 +204,14 @@ const links = [
                 v-model="state.fields[index].values"
                 name="values"
                 placeholder="Field values"
+              />
+            </UFormGroup>
+
+            <UFormGroup>
+              <UCheckbox
+                v-model="state.fields[index].required"
+                name="required"
+                label="Required field"
               />
             </UFormGroup>
           </div>

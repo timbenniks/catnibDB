@@ -166,15 +166,18 @@ const links = [
             </UFormGroup>
           </UCard>
         </div>
+
+        <DraggableComponents
+          :availableComponents="availableComponents"
+          :currentComponents="state.components"
+        />
+
         <UButton type="submit"> Save </UButton>
         <UButton variant="link" color="rose" @click="delPage">Delete</UButton>
       </UForm>
-      <DraggableComponents
-        :availableComponents="availableComponents"
-        :pageComponents="state.components || []"
-      />
 
-      <pre class="mt-12">{{ page }}</pre>
+      <h3 class="text-3xl mt-12 mb-4">Components on page</h3>
+      <pre>{{ state.components }}</pre>
     </UPageBody>
     <UNotifications />
   </UPage>

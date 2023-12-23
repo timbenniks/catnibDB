@@ -1,52 +1,106 @@
 <script lang="ts" setup>
 import { VueDraggable } from "vue-draggable-plus";
 
-const props = defineProps(["pageComponents", "availableComponents"]);
+type component_field = {
+  id: string;
+  type: string;
+  label: string;
+  values?: string;
+  required?: boolean;
+  content?: any;
+};
 
-const list1 = ref(props.availableComponents);
-const list2 = ref(props.pageComponents || []);
+type component = {
+  id: number;
+  created_at: string;
+  title: string;
+  fields: [component_field];
+  api_id: "string";
+};
 
-function clone(element: any) {
-  return {
-    element,
-  };
+const props = defineProps<{
+  currentComponents: [component];
+  availableComponents: [component];
+}>();
+
+const components = ref(props.currentComponents || []);
+
+function onUpdate() {
+  console.log("save this");
+}
+
+function addComponent(id: number) {
+  components.value.push(
+    props.availableComponents.find((comp: component) => comp.id === id)
+  );
+}
+
+function removeComponent(index: number) {
+  components.value?.splice(index, 1);
 }
 </script>
 
 <template>
   <div class="flex flex-col">
-    <VueDraggable
-      v-model="list1"
-      animation="150"
-      ghostClass="ghost"
-      :group="{ name: 'people', pull: 'clone', put: false }"
-      :clone="clone"
-      :sort="false"
-      class="flex flex-row gap-2 p-4 w-300px bg-gray-500/5 rounded"
-    >
-      <div
-        v-for="item in list1"
-        :key="item.id"
-        class="cursor-move h-50px bg-gray-500/5 rounded p-3"
-      >
-        {{ item.title }}
-      </div>
-    </VueDraggable>
+    <div class="space-x-2 mb-4">
+      <UButton
+        v-for="availableComponent in availableComponents"
+        :label="availableComponent.title"
+        color="primary"
+        variant="soft"
+        @click="addComponent(availableComponent.id)"
+        icon="i-heroicons-plus"
+      />
+    </div>
 
     <VueDraggable
-      v-model="list2"
+      v-model="components"
       animation="150"
-      group="people"
       ghostClass="ghost"
-      class="flex flex-col mt-4 gap-2 p-4 w-full m-auto bg-gray-500/5 rounded overflow-auto"
+      @update="onUpdate"
     >
-      <div
-        v-for="item in list2"
-        :key="item.id"
-        class="cursor-move h-50px bg-gray-500/5 rounded p-3"
+      <UCard
+        v-for="(component, index) in components"
+        :key="component.id"
+        :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }"
+        class="mb-4"
       >
-        <pre>{{ item }}</pre>
-      </div>
+        <template #header>
+          <div class="flex justify-between">
+            <div class="flex cursor-grab">
+              <UIcon name="i-heroicons-bars-4" class="mt-1 mr-2" />
+              <p class="font-bold text-xl">{{ component.title }}</p>
+            </div>
+            <UButton
+              icon="i-heroicons-x-mark"
+              size="xs"
+              color="primary"
+              square
+              variant="solid"
+              @click="removeComponent(index)"
+            />
+          </div>
+        </template>
+        <UFormGroup
+          class="mb-8 last:mb-0"
+          v-for="field in component.fields"
+          :label="field.label"
+          :name="field.id"
+          :key="field.id"
+        >
+          <UInput
+            v-model="field.content"
+            :name="field.id"
+            :required="!!field.required"
+          />
+        </UFormGroup>
+      </UCard>
     </VueDraggable>
   </div>
 </template>
+
+<style lang="postcss">
+.ghost {
+  @apply !bg-primary;
+}
+</style>
