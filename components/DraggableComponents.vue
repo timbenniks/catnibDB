@@ -18,6 +18,8 @@ type component = {
   api_id: "string";
 };
 
+const emit = defineEmits(["save"]);
+
 const props = defineProps<{
   currentComponents: [component];
   availableComponents: [component];
@@ -26,17 +28,23 @@ const props = defineProps<{
 const components = ref(props.currentComponents || []);
 
 function onUpdate() {
-  console.log("save this");
+  save();
 }
 
 function addComponent(id: number) {
   components.value.push(
     props.availableComponents.find((comp: component) => comp.id === id)
   );
+  save();
 }
 
 function removeComponent(index: number) {
   components.value?.splice(index, 1);
+  save();
+}
+
+function save() {
+  emit("save");
 }
 </script>
 
@@ -92,6 +100,7 @@ function removeComponent(index: number) {
             v-model="field.content"
             :name="field.id"
             :required="!!field.required"
+            @blur="save"
           />
         </UFormGroup>
       </UCard>

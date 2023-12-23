@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useThrottleFn } from "@vueuse/core";
 import { updatePage, deletePage } from "../../../lib/helpers";
 
 const { params } = useRoute();
@@ -21,10 +20,6 @@ const imageModalOpen = ref(false);
 async function onSubmit() {
   save();
 }
-
-const saveThrottled = useThrottleFn(() => {
-  save();
-}, 1000);
 
 async function save() {
   const result = await updatePage(state.value, supabase);
@@ -90,7 +85,7 @@ const links = [
             size="xl"
             variant="none"
             :ui="{ variant: { none: 'p-0' }, size: { xl: 'text-5xl' } }"
-            @update:modelValue="saveThrottled"
+            @blur="save"
           />
         </UFormGroup>
 
@@ -150,17 +145,13 @@ const links = [
               class="mb-8"
             />
             <UFormGroup label="Slug" name="slug" class="mb-8">
-              <UInput
-                type="text"
-                v-model="state.slug"
-                @change="saveThrottled"
-              />
+              <UInput type="text" v-model="state.slug" @blur="save" />
             </UFormGroup>
 
             <UFormGroup label="Description" name="description">
               <UTextarea
                 v-model="state.description"
-                @update:modelValue="saveThrottled"
+                @blur="save"
                 variant="outline"
               />
             </UFormGroup>
@@ -170,14 +161,12 @@ const links = [
         <DraggableComponents
           :availableComponents="availableComponents"
           :currentComponents="state.components"
+          @save="save"
         />
 
         <UButton type="submit"> Save </UButton>
         <UButton variant="link" color="rose" @click="delPage">Delete</UButton>
       </UForm>
-
-      <h3 class="text-3xl mt-12 mb-4">Components on page</h3>
-      <pre>{{ state.components }}</pre>
     </UPageBody>
     <UNotifications />
   </UPage>
