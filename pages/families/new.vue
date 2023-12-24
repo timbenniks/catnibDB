@@ -28,13 +28,8 @@ const links = [
 </script>
 
 <template>
-  <UPage :ui="{ wrapper: 'max-w-full', left: 'pl-4' }">
-    <template #left>
-      <UAside>
-        <UPageLinks :links="links" />
-      </UAside>
-    </template>
-    <UPageBody class="max-w-4xl">
+  <UPage class="max-w-4xl mx-auto">
+    <UPageBody>
       <UForm
         :state="state"
         class="space-y-4"

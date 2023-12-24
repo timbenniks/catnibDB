@@ -7,14 +7,56 @@ const links = [
   {
     label: "Cats",
     to: "/cats",
+    children: [
+      {
+        label: "Cat overview",
+        to: "/Cats",
+        icon: "i-heroicons-list-bullet",
+        description: "See all cats",
+      },
+      {
+        label: "Add Cat",
+        to: "/cats/new",
+        icon: "i-heroicons-plus",
+        description: "Add a new cat",
+      },
+    ],
   },
   {
     label: "Foster Families",
     to: "/families",
+    children: [
+      {
+        label: "Families overview",
+        to: "/families",
+        icon: "i-heroicons-list-bullet",
+        description: "See all families",
+      },
+      {
+        label: "Add Family",
+        to: "/families/new",
+        icon: "i-heroicons-plus",
+        description: "Add a new family",
+      },
+    ],
   },
   {
     label: "Site builder",
     to: "/sitebuilder",
+    children: [
+      {
+        label: "Pages",
+        to: "/sitebuilder/pages",
+        icon: "i-heroicons-clipboard-document-list",
+        description: "Edit your pages here",
+      },
+      {
+        label: "Components",
+        to: "/sitebuilder/components",
+        icon: "i-heroicons-code-bracket-square",
+        description: "Manage component config",
+      },
+    ],
   },
 ];
 

@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import type { RealtimeChannel } from "@supabase/supabase-js";
+
+definePageMeta({
+  layout: "meta",
+});
+
 const supabase = useSupabaseClient();
 const { params } = useRoute();
 const pageId = Number(params.page);

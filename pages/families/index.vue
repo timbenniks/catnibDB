@@ -55,12 +55,7 @@ function select(row: any) {
 </script>
 
 <template>
-  <UPage :ui="{ wrapper: 'max-w-full', left: 'pl-8' }">
-    <template #left>
-      <UAside>
-        <UPageLinks :links="links" />
-      </UAside>
-    </template>
+  <UPage class="max-w-7xl mx-auto">
     <UPageBody>
       <UButton
         icon="i-heroicons-pencil-square"

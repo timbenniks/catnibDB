@@ -55,87 +55,27 @@ async function delPage() {
   await deletePage(state.value.id, supabase);
   navigateTo("/sitebuilder/pages");
 }
-
-const links = [
-  {
-    label: "Pages",
-    icon: "i-heroicons-clipboard-document-list",
-    to: "/sitebuilder/pages",
-  },
-  {
-    label: "Components",
-    icon: "i-heroicons-code-bracket-square",
-    to: "/sitebuilder/components",
-  },
-];
 </script>
 
 <template>
-  <UPage :ui="{ wrapper: 'max-w-full', left: 'pl-4' }">
-    <template #left>
-      <UAside>
-        <UPageLinks :links="links" />
-      </UAside>
-    </template>
-    <UPageBody class="max-w-4xl">
-      <UForm :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Name" name="name">
-          <UInput
-            v-model="state.title"
-            size="xl"
-            variant="none"
-            :ui="{ variant: { none: 'p-0' }, size: { xl: 'text-5xl' } }"
-            @blur="save"
-          />
-        </UFormGroup>
+  <UPage class="max-w-full">
+    <UPageBody>
+      <div class="px-8 flex">
+        <UForm
+          :state="state"
+          class="space-y-4 w-full max-w-xl h-screen"
+          @submit="onSubmit"
+        >
+          <UFormGroup label="Name" name="name">
+            <UInput
+              v-model="state.title"
+              size="xl"
+              variant="none"
+              :ui="{ variant: { none: 'p-0' }, size: { xl: 'text-5xl' } }"
+              @blur="save"
+            />
+          </UFormGroup>
 
-        <div class="grid grid-cols-2 gap-4">
-          <UCard
-            class="relative"
-            :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }"
-          >
-            <NuxtImg
-              v-if="state.image"
-              provider="cloudinary"
-              :src="`${supaseImgBase}${state.image}`"
-              width="500"
-              fit="fill"
-              :modifiers="{ gravity: 'subject', ar: '16:9' }"
-              class="rounded-lg"
-            />
-            <UButton
-              icon="i-heroicons-plus"
-              size="sm"
-              color="primary"
-              variant="soft"
-              label="Add Image"
-              :trailing="false"
-              class="mt-4"
-              v-else
-              @click="imageModalOpen = true"
-            />
-            <UModal v-model="imageModalOpen">
-              <UCard>
-                <template #header>
-                  <div class="flex items-center justify-between">
-                    <h3
-                      class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
-                    >
-                      Add Image
-                    </h3>
-                    <UButton
-                      color="gray"
-                      variant="ghost"
-                      icon="i-heroicons-x-mark-20-solid"
-                      class="-my-1"
-                      @click="imageModalOpen = false"
-                    />
-                  </div>
-                </template>
-                <new-image @newImage="addNewImage" />
-              </UCard>
-            </UModal>
-          </UCard>
           <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">
             <UCheckbox
               v-model="state.published"
@@ -148,25 +88,75 @@ const links = [
               <UInput type="text" v-model="state.slug" @blur="save" />
             </UFormGroup>
 
-            <UFormGroup label="Description" name="description">
+            <UFormGroup label="Description" name="description" class="mb-8">
               <UTextarea
                 v-model="state.description"
                 @blur="save"
                 variant="outline"
               />
             </UFormGroup>
+            <UFormGroup label="Image" name="image">
+              <NuxtImg
+                v-if="state.image"
+                provider="cloudinary"
+                :src="`${supaseImgBase}${state.image}`"
+                width="200"
+                fit="fill"
+                :modifiers="{ gravity: 'subject', ar: '16:9' }"
+                class="rounded-lg"
+              />
+              <UButton
+                icon="i-heroicons-plus"
+                size="sm"
+                color="primary"
+                variant="soft"
+                label="Add Image"
+                :trailing="false"
+                class="mt-4"
+                v-else
+                @click="imageModalOpen = true"
+              />
+              <UModal v-model="imageModalOpen">
+                <UCard>
+                  <template #header>
+                    <div class="flex items-center justify-between">
+                      <h3
+                        class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                      >
+                        Add Image
+                      </h3>
+                      <UButton
+                        color="gray"
+                        variant="ghost"
+                        icon="i-heroicons-x-mark-20-solid"
+                        class="-my-1"
+                        @click="imageModalOpen = false"
+                      />
+                    </div>
+                  </template>
+                  <new-image @newImage="addNewImage" />
+                </UCard>
+              </UModal>
+            </UFormGroup>
           </UCard>
+
+          <DraggableComponents
+            :availableComponents="availableComponents"
+            :currentComponents="state.components"
+            @save="save"
+          />
+
+          <UButton type="submit"> Save </UButton>
+          <UButton variant="link" color="rose" @click="delPage">Delete</UButton>
+        </UForm>
+        <div class="w-full max-w-7xl ml-4">
+          <h3 class="mb-2">Page preview</h3>
+          <iframe
+            :src="`http://localhost:3000/demo/${pageId}`"
+            class="w-full h-screen border-2 border-primary rounded-lg"
+          />
         </div>
-
-        <DraggableComponents
-          :availableComponents="availableComponents"
-          :currentComponents="state.components"
-          @save="save"
-        />
-
-        <UButton type="submit"> Save </UButton>
-        <UButton variant="link" color="rose" @click="delPage">Delete</UButton>
-      </UForm>
+      </div>
     </UPageBody>
     <UNotifications />
   </UPage>

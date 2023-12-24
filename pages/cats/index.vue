@@ -20,14 +20,6 @@ import { translateLabel } from "../lib/helpers";
 const indexName = "libres_chats";
 const algolia = useAlgoliaRef();
 
-const links = [
-  {
-    label: "Cat overview",
-    icon: "i-heroicons-list-bullet",
-    to: "/cats",
-  },
-];
-
 const columns = [
   {
     key: "name",
@@ -223,10 +215,6 @@ function select(row: any) {
               </UCheckbox>
             </template>
           </ais-refinement-list>
-
-          <template #top>
-            <UPageLinks :links="links" />
-          </template>
         </UAside>
       </template>
       <UPageBody>
