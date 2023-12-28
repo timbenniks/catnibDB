@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useFileDialog } from "@vueuse/core";
 import { v4 as uuid } from "uuid";
-
+const props = defineProps(["location"]);
 const supabase = useSupabaseClient();
 const fileToUpload = ref();
 const uploading = ref(false);
@@ -21,7 +21,7 @@ async function uploadToSupabase() {
   const filename = `${uuid()}-${fileToUpload.value.name}`;
 
   const { data, error: uploadIssue } = await supabase.storage
-    .from("cat_images")
+    .from(props.location ? props.location : "cat_images")
     .upload(filename, fileToUpload.value, {
       cacheControl: "3600",
       upsert: false,

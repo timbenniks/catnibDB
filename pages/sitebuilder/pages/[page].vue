@@ -51,6 +51,11 @@ function addNewImage(image: string) {
   save();
 }
 
+function deleteImage() {
+  state.value.image = "";
+  save();
+}
+
 async function delPage() {
   await deletePage(state.value.id, supabase);
   navigateTo("/sitebuilder/pages");
@@ -96,15 +101,26 @@ async function delPage() {
               />
             </UFormGroup>
             <UFormGroup label="Image" name="image">
-              <NuxtImg
-                v-if="state.image"
-                provider="cloudinary"
-                :src="`${supaseImgBase}${state.image}`"
-                width="200"
-                fit="fill"
-                :modifiers="{ gravity: 'subject', ar: '16:9' }"
-                class="rounded-lg"
-              />
+              <div v-if="state.image" class="relative w-[200px]">
+                <NuxtImg
+                  provider="cloudinary"
+                  :src="`${supaseImgBase}content_images/${state.image}`"
+                  width="200"
+                  fit="fill"
+                  :modifiers="{ gravity: 'subject', ar: '16:9' }"
+                  class="rounded-lg"
+                />
+                <UButton
+                  icon="i-heroicons-x-mark"
+                  size="xs"
+                  color="primary"
+                  variant="solid"
+                  square
+                  class="absolute right-2 bottom-2"
+                  @click="deleteImage()"
+                />
+              </div>
+
               <UButton
                 icon="i-heroicons-plus"
                 size="sm"
@@ -134,7 +150,10 @@ async function delPage() {
                       />
                     </div>
                   </template>
-                  <new-image @newImage="addNewImage" />
+                  <new-image
+                    @newImage="addNewImage"
+                    location="content_images"
+                  />
                 </UCard>
               </UModal>
             </UFormGroup>

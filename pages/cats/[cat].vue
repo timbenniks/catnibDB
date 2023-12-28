@@ -59,7 +59,7 @@ const images = computed(() => {
       .trim()
       .split(",")
       .map((image: string, index: number) => {
-        return `${supaseImgBase}${image}`;
+        return `${supaseImgBase}cat_images/${image}`;
       });
   }
 
@@ -438,7 +438,7 @@ const links = [
                   />
                 </div>
               </template>
-              <new-image @newImage="addNewImage" />
+              <new-image location="cat_images" @newImage="addNewImage" />
             </UCard>
           </UModal>
         </UCard>

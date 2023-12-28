@@ -27,6 +27,12 @@ const props = defineProps<{
 
 const components = ref(props.currentComponents || []);
 
+const {
+  public: { supaseImgBase },
+} = useRuntimeConfig();
+
+const imageModalOpen = ref(false);
+
 function onUpdate() {
   save();
 }
@@ -40,6 +46,17 @@ function addComponent(id: number) {
 
 function removeComponent(index: number) {
   components.value?.splice(index, 1);
+  save();
+}
+
+function addNewImage(field: any, image: string) {
+  field.content = image;
+  imageModalOpen.value = false;
+  save();
+}
+
+function deleteImage(field: any) {
+  field.content = "";
   save();
 }
 
@@ -97,11 +114,78 @@ function save() {
           :key="field.id"
         >
           <UInput
+            v-if="field.type === 'text'"
             v-model="field.content"
             :name="field.id"
             :required="!!field.required"
             @blur="save"
           />
+
+          <USelect
+            v-if="field.type === 'dropdown'"
+            v-model="field.content"
+            :name="field.id"
+            :required="!!field.required"
+            :options="field.values?.split('|')"
+            @blur="save"
+          />
+
+          <div v-if="field.type === 'image'" class="relative w-[200px]">
+            <div v-if="field.content !== ''">
+              <NuxtImg
+                provider="cloudinary"
+                :src="`${supaseImgBase}content_images/${field.content}`"
+                width="200"
+                fit="fill"
+                :modifiers="{ gravity: 'subject', ar: '16:9' }"
+                class="rounded-lg"
+              />
+              <UButton
+                icon="i-heroicons-x-mark"
+                size="xs"
+                color="primary"
+                variant="solid"
+                square
+                class="absolute right-2 bottom-2"
+                @click="deleteImage(field)"
+              />
+            </div>
+
+            <UButton
+              icon="i-heroicons-plus"
+              size="sm"
+              color="primary"
+              variant="soft"
+              label="Add Image"
+              :trailing="false"
+              v-else
+              @click="imageModalOpen = true"
+            />
+            <UModal v-model="imageModalOpen">
+              <UCard>
+                <template #header>
+                  <div class="flex items-center justify-between">
+                    <h3
+                      class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                    >
+                      Add Image
+                    </h3>
+                    <UButton
+                      color="gray"
+                      variant="ghost"
+                      icon="i-heroicons-x-mark-20-solid"
+                      class="-my-1"
+                      @click="imageModalOpen = false"
+                    />
+                  </div>
+                </template>
+                <new-image
+                  @newImage="(image:string) => addNewImage(field, image)"
+                  location="content_images"
+                />
+              </UCard>
+            </UModal>
+          </div>
         </UFormGroup>
       </UCard>
     </VueDraggable>

@@ -53,7 +53,7 @@ onUnmounted(() => {
       class="mb-8"
       v-if="page.image"
       width="300"
-      :src="`https://res.cloudinary.com/dwfcofnrd/image/fetch/f_auto,q_auto,g_auto:subject,ar_16:9,w_500,c_fill/https://qudljltfyoctkydecbon.supabase.co/storage/v1/object/public/cat_images/${page.image}`"
+      :src="`https://res.cloudinary.com/dwfcofnrd/image/fetch/f_auto,q_auto,g_auto:subject,ar_16:9,w_500,c_fill/https://qudljltfyoctkydecbon.supabase.co/storage/v1/object/public/content_images/${page.image}`"
     />
 
     <div v-for="comp in page.components" :key="comp.id" class="ml-8 mb-8">

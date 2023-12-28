@@ -8,7 +8,7 @@ const props = defineProps(["images"]);
 const image = computed(() => {
   const imageName = props.images.split(",")[0];
 
-  return `${supaseImgBase}${imageName}`;
+  return `${supaseImgBase}cat_images/${imageName}`;
 });
 </script>
 

@@ -56,6 +56,12 @@ const links = [
         icon: "i-heroicons-code-bracket-square",
         description: "Manage component config",
       },
+      {
+        label: "Media Assets",
+        to: "/sitebuilder/media",
+        icon: "i-heroicons-photo",
+        description: "Manage media assets",
+      },
     ],
   },
 ];
