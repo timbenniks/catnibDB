@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { updatePage, deletePage } from "../../../lib/helpers";
-
+const { assets: content_images } = await useAssets("content_images");
 const { params } = useRoute();
 const pageId = Number(params.page);
 const page = await usePage(pageId);
@@ -121,41 +121,11 @@ async function delPage() {
                 />
               </div>
 
-              <UButton
-                icon="i-heroicons-plus"
-                size="sm"
-                color="primary"
-                variant="soft"
-                label="Add Image"
-                :trailing="false"
-                class="mt-4"
+              <select-media
+                @addNewImage="addNewImage"
+                bucket="content_images"
                 v-else
-                @click="imageModalOpen = true"
               />
-              <UModal v-model="imageModalOpen">
-                <UCard>
-                  <template #header>
-                    <div class="flex items-center justify-between">
-                      <h3
-                        class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
-                      >
-                        Add Image
-                      </h3>
-                      <UButton
-                        color="gray"
-                        variant="ghost"
-                        icon="i-heroicons-x-mark-20-solid"
-                        class="-my-1"
-                        @click="imageModalOpen = false"
-                      />
-                    </div>
-                  </template>
-                  <new-image
-                    @newImage="addNewImage"
-                    location="content_images"
-                  />
-                </UCard>
-              </UModal>
             </UFormGroup>
           </UCard>
 

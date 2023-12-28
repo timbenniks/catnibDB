@@ -150,41 +150,12 @@ function save() {
                 @click="deleteImage(field)"
               />
             </div>
-
-            <UButton
-              icon="i-heroicons-plus"
-              size="sm"
-              color="primary"
-              variant="soft"
-              label="Add Image"
-              :trailing="false"
+            <select-media
+              @addNewImage="(image:string) => addNewImage(field,
+            image)"
+              bucket="content_images"
               v-else
-              @click="imageModalOpen = true"
             />
-            <UModal v-model="imageModalOpen">
-              <UCard>
-                <template #header>
-                  <div class="flex items-center justify-between">
-                    <h3
-                      class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
-                    >
-                      Add Image
-                    </h3>
-                    <UButton
-                      color="gray"
-                      variant="ghost"
-                      icon="i-heroicons-x-mark-20-solid"
-                      class="-my-1"
-                      @click="imageModalOpen = false"
-                    />
-                  </div>
-                </template>
-                <new-image
-                  @newImage="(image:string) => addNewImage(field, image)"
-                  location="content_images"
-                />
-              </UCard>
-            </UModal>
           </div>
         </UFormGroup>
       </UCard>
