@@ -2,18 +2,26 @@
 import { useFileDialog } from "@vueuse/core";
 import { v4 as uuid } from "uuid";
 const props = defineProps(["location"]);
-const supabase = useSupabaseClient();
-const fileToUpload = ref();
-const uploading = ref(false);
 const emit = defineEmits(["newImage"]);
+
+const supabase = useSupabaseClient();
+
+const fileToUpload = ref();
+const previewImage = ref();
+const uploading = ref(false);
 const error = ref(false);
 
 const { files, open, reset, onChange } = useFileDialog({
   accept: "image/*",
   directory: false,
+  multiple: false,
 });
-onChange(async (files: FileList) => {
-  fileToUpload.value = files[0];
+
+onChange((files) => {
+  if (files) {
+    fileToUpload.value = files[0];
+    previewImage.value = URL.createObjectURL(files[0]);
+  }
 });
 
 async function uploadToSupabase() {
@@ -41,37 +49,52 @@ async function uploadToSupabase() {
 
 <template>
   <template v-if="!error">
-    <UButtonGroup size="sm" orientation="horizontal">
-      <UButton
-        icon="i-heroicons-photo"
-        color="primary"
-        variant="soft"
-        label="Choose image"
-        @click="open()"
-      />
-      <UButton
-        icon="i-heroicons-x-mark"
-        color="primary"
-        variant="soft"
-        :disabled="!files"
-        @click="reset()"
-        square
-        :loading="uploading"
-      />
-    </UButtonGroup>
+    <UButton
+      icon="i-heroicons-photo"
+      color="primary"
+      variant="soft"
+      :label="files ? 'Select another image' : 'Choose image'"
+      @click="open()"
+    />
 
     <div v-if="files" class="mt-4">
-      <p class="mb-4">
-        Selected: <strong>{{ files[0].name }}</strong>
-      </p>
+      <div class="flex space-x-4 mb-4">
+        <img :src="previewImage" width="100" class="rounded-lg" />
+        <ul class="mb-4 text-xs">
+          <li>
+            File: <strong>{{ files[0].name }}</strong>
+          </li>
+          <li>
+            Size: <strong>{{ files[0].size }}</strong>
+          </li>
+          <li>
+            Type: <strong>{{ files[0].type }}</strong>
+          </li>
+          <li>
+            Last modified:
+            <strong>{{ new Date(files[0].lastModified) }}</strong>
+          </li>
+        </ul>
+      </div>
+      <div class="flex space-x-4">
+        <UButton
+          icon="i-heroicons-arrow-up-tray"
+          color="primary"
+          variant="solid"
+          label="Upload"
+          @click="uploadToSupabase"
+        />
 
-      <UButton
-        icon="i-heroicons-arrow-up-tray"
-        color="primary"
-        variant="solid"
-        label="Upload"
-        @click="uploadToSupabase"
-      />
+        <UButton
+          icon="i-heroicons-x-mark"
+          color="primary"
+          variant="link"
+          :disabled="!files"
+          @click="reset()"
+          label="Clear selection"
+          :loading="uploading"
+        />
+      </div>
     </div>
   </template>
   <template v-else>

@@ -3,9 +3,10 @@ const props = defineProps(["bucket"]);
 const imageModalOpen = ref(false);
 const emit = defineEmits(["addNewImage"]);
 
-const { assets } = await useAssets(props.bucket);
+const { assets, refresh } = await useAssets(props.bucket);
 
 function addNew(image: string) {
+  refresh();
   imageModalOpen.value = false;
   emit("addNewImage", image);
 }
