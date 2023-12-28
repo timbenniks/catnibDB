@@ -57,7 +57,7 @@ const links = [
         description: "Manage component config",
       },
       {
-        label: "Media Assets",
+        label: "Asset manager",
         to: "/sitebuilder/media",
         icon: "i-heroicons-photo",
         description: "Manage media assets",
