@@ -132,7 +132,7 @@ function deleteImage(image: string) {
     return;
   }
 
-  const cleanedUpImage = image.split(supaseImgBase)[1];
+  const cleanedUpImage = image.split(`${supaseImgBase}cat_images/`)[1];
   const imagesAsArray = state.value.images.split(",").map((image: string) => {
     return image;
   });
@@ -410,37 +410,7 @@ const links = [
             </div>
           </div>
 
-          <UButton
-            icon="i-heroicons-plus"
-            size="sm"
-            color="primary"
-            variant="soft"
-            label="Add Image"
-            :trailing="false"
-            class="mt-4"
-            @click="imageModalOpen = true"
-          />
-          <UModal v-model="imageModalOpen">
-            <UCard>
-              <template #header>
-                <div class="flex items-center justify-between">
-                  <h3
-                    class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
-                  >
-                    Add Image
-                  </h3>
-                  <UButton
-                    color="gray"
-                    variant="ghost"
-                    icon="i-heroicons-x-mark-20-solid"
-                    class="-my-1"
-                    @click="imageModalOpen = false"
-                  />
-                </div>
-              </template>
-              <new-image location="cat_images" @newImage="addNewImage" />
-            </UCard>
-          </UModal>
+          <select-media @addNewImage="addNewImage" bucket="cat_images" />
         </UCard>
 
         <UCard :ui="{ background: 'bg-gray-50 dark:bg-gray-950' }">

@@ -6,6 +6,7 @@ const emit = defineEmits(["addNewImage"]);
 const { assets } = await useAssets(props.bucket);
 
 function addNew(image: string) {
+  imageModalOpen.value = false;
   emit("addNewImage", image);
 }
 </script>
