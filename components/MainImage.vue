@@ -22,5 +22,6 @@ const image = computed(() => {
     fit="fill"
     :modifiers="{ gravity: 'subject' }"
     class="rounded-lg"
+    loading="lazy"
   />
 </template>
