@@ -407,6 +407,9 @@ export function translateLabel(label: string) {
     case "image":
       translated = "Image"
       break;
+    case "cats":
+      translated = "Cats"
+      break;
   }
 
   return translated;
