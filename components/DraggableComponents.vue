@@ -37,6 +37,10 @@ function onUpdate() {
   save();
 }
 
+function setRichTextContent(field: any, content: string) {
+  field.content = content;
+}
+
 function addComponent(id: number) {
   components.value.push(
     props.availableComponents.find((comp: component) => comp.id === id)
@@ -109,7 +113,7 @@ function save() {
         <UFormGroup
           class="mb-8 last:mb-0"
           v-for="field in component.fields"
-          :label="field.label"
+          :label="field.type !== 'checkbox' ? field.label : false"
           :name="field.id"
           :key="field.id"
         >
@@ -128,6 +132,26 @@ function save() {
             :required="!!field.required"
             :options="field.values?.split('|')"
             @blur="save"
+          />
+          <div v-if="field.type === 'rich_text'">
+            <QuillEditor
+              theme="snow"
+              :name="field.id"
+              contentType="html"
+              :content="field.content"
+              @update:content="(content:string) => setRichTextContent(field,
+            content)"
+              @blur="save"
+            />
+          </div>
+
+          <UCheckbox
+            v-if="field.type === 'checkbox'"
+            v-model="field.content"
+            :name="field.id"
+            :required="!!field.required"
+            :label="field.label"
+            @change="save"
           />
 
           <div v-if="field.type === 'image'" class="relative w-[200px]">
@@ -166,5 +190,19 @@ function save() {
 <style lang="postcss">
 .ghost {
   @apply !bg-primary;
+}
+
+.ql-stroke {
+  @apply stroke-gray-600 dark:stroke-white;
+}
+
+.ql-toolbar.ql-snow {
+  border: none;
+  @apply ring-1 ring-inset ring-gray-300 dark:ring-gray-600 dark:bg-gray-950 text-gray-900 rounded-t-lg;
+}
+
+.ql-container.ql-snow {
+  border: none;
+  @apply ring-1 ring-inset ring-gray-300 dark:ring-gray-700 dark:bg-gray-900 text-gray-900 rounded-b-lg dark:text-white;
 }
 </style>

@@ -14,10 +14,7 @@ async function refreshList() {
 }
 
 async function deleteImage(name: string, bucket: string) {
-  const res = await useDeleteAsset(name, bucket);
-
-  console.log(res);
-
+  await useDeleteAsset(name, bucket);
   await refreshList();
 }
 

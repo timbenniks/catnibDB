@@ -67,24 +67,11 @@ async function delComponent() {
   await deleteComponent(state.value.id, supabase);
   navigateTo("/sitebuilder/components");
 }
-
-const links = [
-  {
-    label: "Pages",
-    icon: "i-heroicons-clipboard-document-list",
-    to: "/sitebuilder/pages",
-  },
-  {
-    label: "Components",
-    icon: "i-heroicons-code-bracket-square",
-    to: "/sitebuilder/components",
-  },
-];
 </script>
 
 <template>
   <UPage class="max-w-4xl mx-auto">
-    <UPageBody>
+    <UPageBody class="pb-12">
       <UForm :state="state" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Name" name="name">
           <UInput

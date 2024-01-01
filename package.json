@@ -12,8 +12,8 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxt/ui": "^2.11.1",
-    "@nuxtjs/supabase": "^1.1.4",
-    "nuxt": "^3.8.2"
+    "@nuxtjs/supabase": "^1.1.5",
+    "nuxt": "^3.9.0"
   },
   "dependencies": {
     "@nuxt/image": "^1.1.0",
@@ -21,13 +21,15 @@
     "@nuxtjs/algolia": "^1.10.1",
     "@sindresorhus/slugify": "^2.2.1",
     "@types/uuid": "^9.0.7",
-    "@vueuse/core": "^10.7.0",
+    "@vueup/vue-quill": "^1.2.0",
+    "@vueuse/core": "^10.7.1",
     "camelcase": "^8.0.0",
     "chart.js": "^4.4.1",
+    "postcss-custom-properties": "^13.3.3",
     "pretty-bytes": "^6.1.1",
     "uuid": "^9.0.1",
     "vue-chart-3": "^3.1.8",
-    "vue-draggable-plus": "^0.3.2",
-    "vue-instantsearch": "^4.13.1"
+    "vue-draggable-plus": "^0.3.3",
+    "vue-instantsearch": "^4.13.2"
   }
 }
