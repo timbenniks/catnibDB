@@ -2,10 +2,23 @@ import { serverSupabaseClient } from '#supabase/server'
 import { addCatData } from "../../lib/helpers"
 
 export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig(event)
   const client = await serverSupabaseClient(event)
   const { id } = getQuery(event)
 
-  console.log(event.context.apiKey)
+  if (!event.context.apiKey) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'No API key present',
+    })
+  }
+
+  if (!event.context.apiKey !== config.apiKey) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Wrong API key',
+    })
+  }
 
   if (!id) {
     throw createError({
@@ -31,8 +44,5 @@ export default defineEventHandler(async (event) => {
     throw createError(error)
   }
 
-  return {
-    apiKey: event.context.apiKey,
-    ...await addCatData(data, client)
-  }
+  return await addCatData(data, client)
 })
