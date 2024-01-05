@@ -3,6 +3,7 @@ import { addCatData } from "../../lib/helpers"
 
 export default defineEventHandler(async (event) => {
   const client = await serverSupabaseClient(event)
+  const { per_page, order_by, order_direction } = getQuery(event)
 
   const { data, error } = await client
     .from("cats")
@@ -14,6 +15,8 @@ export default defineEventHandler(async (event) => {
           id,name,address,email,phone
         )
       `)
+    .order(order_by as string || 'id', { ascending: order_direction === 'asc' })
+    .limit(Number(per_page || 20))
 
   if (error) {
     throw createError(error)
