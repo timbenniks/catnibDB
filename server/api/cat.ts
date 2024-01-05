@@ -33,7 +33,6 @@ export default defineEventHandler(async (event) => {
 
   return {
     apiKey: event.context.apiKey,
-    //...await addCatData(data, client)
-    data
+    ...await addCatData(data, client)
   }
 })
