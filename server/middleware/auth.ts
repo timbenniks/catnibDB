@@ -4,7 +4,7 @@ export default defineEventHandler((event) => {
 
   if (!apiKey) {
     throw createError({
-      statusCode: 400,
+      statusCode: 403,
       statusMessage: 'No API key present',
     })
   }
