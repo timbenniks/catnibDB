@@ -2,6 +2,10 @@ export default defineEventHandler((event) => {
   const config = useRuntimeConfig(event)
   const { 'x-api-key': apiKey } = getRequestHeaders(event)
 
+  if (!event.path.includes('/api')) {
+    return
+  }
+
   if (!apiKey) {
     throw createError({
       statusCode: 403,
