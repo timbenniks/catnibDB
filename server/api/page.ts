@@ -2,21 +2,28 @@ import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
   const client = await serverSupabaseClient(event)
-  const { id } = getQuery(event)
+  const { id, slug } = getQuery(event)
 
-  if (!id) {
+  if (!id && !slug) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'ID should be present',
+      statusMessage: 'ID or slug should be present',
     })
   }
 
-  const { data, error } = await client
+  let query = client
     .from("pages")
     .select("*")
-    .eq("id", id)
-    .single();
 
+  if (slug) {
+    query = query.eq("slug", slug)
+  }
+
+  if (id) {
+    query = query.eq("id", id)
+  }
+
+  const { data, error } = await query.single();
 
   if (error) {
     throw createError(error)
