@@ -93,6 +93,16 @@ export async function updateCat(catObject: any, client: SupabaseClient) {
 }
 
 export async function deleteCat(catId: number, client: SupabaseClient) {
+  await client
+    .from('treatments')
+    .delete()
+    .eq('cat_id', catId)
+
+  await client
+    .from('weight')
+    .delete()
+    .eq('cat_id', catId)
+
   const { error } = await client
     .from('cats')
     .delete()
@@ -100,9 +110,13 @@ export async function deleteCat(catId: number, client: SupabaseClient) {
 
   let res: 'error' | 'success' = 'success'
 
+  await deleteCatFromAlgolia(catId)
+
   if (error) {
     res = 'error'
   }
+
+  console.log(error)
 
   return res
 }
@@ -298,6 +312,23 @@ export async function updateAlgolia(cat: any) {
 
   await algoliaIndexManager
     .saveObject(catForAlgolia, { autoGenerateObjectIDIfNotExist: true })
+    .catch((err) => console.log(err))
+}
+
+export async function deleteCatFromAlgolia(catId: number) {
+  const { public: {
+    algoliaId, algoliaAdminApiKey, algoliaIndex }
+  } = useRuntimeConfig();
+
+  const algoliaClient = algoliasearch(
+    algoliaId,
+    algoliaAdminApiKey
+  )
+
+  const algoliaIndexManager = algoliaClient.initIndex(algoliaIndex)
+
+  await algoliaIndexManager
+    .deleteObject(catId.toString())
     .catch((err) => console.log(err))
 }
 
